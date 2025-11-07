@@ -1,6 +1,7 @@
 "use client";
 import { ArrowRight, Wallet, Shield, Zap, Globe, Phone, Smartphone, Banknote, Lightbulb, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import PhoneNumberModal from "@/components/PhoneNumberModal";
 import ImgCoin from "../../assets/coins.png";
 
 export default function OnboardingPage() {
@@ -8,9 +9,6 @@ export default function OnboardingPage() {
   const [mounted, setMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showModal, setShowModal] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isValid, setIsValid] = useState(false);
-  const [error, setError] = useState("");
 
   // Carousel slides content
   const slides = [
@@ -70,47 +68,21 @@ export default function OnboardingPage() {
     setShowModal(true);
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+  const handlePhoneSubmit = (phoneNumber: string) => {
+    // Store with the full format +234
+    const fullPhoneNumber = `+234${phoneNumber}`;
     
-    // Limit to 11 digits
-    if (value.length > 11) {
-      value = value.slice(0, 11);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("onboarding_completed", "true");
+      localStorage.setItem("user_phone", fullPhoneNumber);
     }
     
-    setPhoneNumber(value);
+    // Redirect or next step
+    alert(`Welcome to Celo Naija! Phone: ${fullPhoneNumber}`);
+    setShowModal(false);
     
-    // Validate Nigerian phone number (starts with 070, 080, 081, 090, 091 etc.)
-    const nigerianPhoneRegex = /^(0)(7|8|9)(0|1)\d{8}$/;
-    
-    if (value.length === 11 && nigerianPhoneRegex.test(value)) {
-      setIsValid(true);
-      setError("");
-    } else if (value.length === 11) {
-      setIsValid(false);
-      setError("Please enter a valid Nigerian phone number");
-    } else {
-      setIsValid(false);
-      setError("");
-    }
-  };
-
-  const handleSubmit = () => {
-    if (isValid) {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("onboarding_completed", "true");
-        localStorage.setItem("user_phone", phoneNumber);
-      }
-      // Redirect or next step
-      alert(`Welcome to Celo Naija! Phone: ${phoneNumber}`);
-      setShowModal(false);
-    }
-  };
-
-  const formatPhoneNumber = (value: string) => {
-    if (value.length <= 4) return value;
-    if (value.length <= 7) return `${value.slice(0, 4)} ${value.slice(4)}`;
-    return `${value.slice(0, 4)} ${value.slice(4, 7)} ${value.slice(7)}`;
+    // You can add navigation here, e.g.:
+    // router.push('/dashboard');
   };
 
   const nextSlide = () => {
@@ -172,7 +144,7 @@ export default function OnboardingPage() {
 
             {/* Main Heading with gradient text */}
             <h1
-              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl leading-tight mb-4 sm:mb-5"
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl leading-normal mb-4 sm:mb-5"
               style={{
                 fontFamily: "Lato, sans-serif",
                 fontWeight: 800,
@@ -301,6 +273,7 @@ export default function OnboardingPage() {
           </div>
 
           {/* Right Section - Image */}
+          {/* Right Section - Image */}
           <div className="w-full lg:w-1/2 flex justify-center lg:justify-end order-1 lg:order-2">
             <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[450px] xl:max-w-[550px]">
               {/* Hexagon border effect */}
@@ -341,109 +314,10 @@ export default function OnboardingPage() {
 
       {/* Phone Number Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
-          <div 
-            className="relative w-full max-w-md bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-purple-400/20 p-5 sm:p-6 lg:p-8"
-            style={{
-              animation: "modalSlideIn 0.3s ease-out"
-            }}
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300"
-              aria-label="Close modal"
-            >
-              <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-            </button>
-
-            {/* Modal Header */}
-            <div className="text-center mb-5 sm:mb-6">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
-                <Phone className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-              </div>
-              <h2 
-                className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5 sm:mb-2"
-                style={{
-                  fontFamily: "Lato, sans-serif",
-                  background: "linear-gradient(135deg, #FFFFFF 0%, #E0E0FF 50%, #C4B5FD 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                Welcome to Celo Naija
-              </h2>
-              <p className="text-gray-400 text-xs sm:text-sm">
-                Enter your phone number to get started
-              </p>
-            </div>
-
-            {/* Phone Input */}
-            <div className="mb-5 sm:mb-6">
-              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 sm:gap-2 text-gray-400">
-                  <span className="text-base sm:text-lg">🇳🇬</span>
-                  <span className="text-xs sm:text-sm">+234</span>
-                </div>
-                <input
-                  type="tel"
-                  value={formatPhoneNumber(phoneNumber)}
-                  onChange={handlePhoneChange}
-                  placeholder="0803 456 7890"
-                  maxLength={13}
-                  className="w-full pl-20 sm:pl-24 pr-3 sm:pr-4 py-3 sm:py-4 bg-white/5 border-2 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-400 transition-all duration-300 text-sm sm:text-base"
-                  style={{
-                    fontFamily: "Lato, sans-serif",
-                    borderColor: error ? "#ef4444" : isValid ? "#35D07F" : "rgba(255,255,255,0.1)"
-                  }}
-                />
-                {isValid && (
-                  <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center">
-                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  </div>
-                )}
-              </div>
-              {error && (
-                <p className="mt-2 text-xs sm:text-sm text-red-400">{error}</p>
-              )}
-              {!error && phoneNumber.length > 0 && !isValid && (
-                <p className="mt-2 text-xs sm:text-sm text-gray-400">
-                  Enter 11 digits starting with 070, 080, 081, 090, or 091
-                </p>
-              )}
-            </div>
-
-            {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              disabled={!isValid}
-              className="w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                fontFamily: "Lato, sans-serif",
-                background: isValid 
-                  ? "linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%)"
-                  : "rgba(255,255,255,0.1)",
-                color: isValid ? "#FFFFFF" : "#6B7280",
-                boxShadow: isValid ? "0 4px 20px rgba(139, 92, 246, 0.3)" : "none"
-              }}
-            >
-              Continue
-            </button>
-
-            {/* Info text */}
-            <p className="mt-3 sm:mt-4 text-center text-xs text-gray-500">
-              By continuing, you agree to our Terms & Privacy Policy
-            </p>
-          </div>
-        </div>
+        <PhoneNumberModal 
+          onSubmit={handlePhoneSubmit}
+          onClose={() => setShowModal(false)}
+        />
       )}
 
       {/* CSS Animations */}
@@ -463,17 +337,6 @@ export default function OnboardingPage() {
           }
           to {
             transform: rotate(360deg);
-          }
-        }
-
-        @keyframes modalSlideIn {
-          from {
-            opacity: 0;
-            transform: translateY(-20px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
           }
         }
       `}</style>

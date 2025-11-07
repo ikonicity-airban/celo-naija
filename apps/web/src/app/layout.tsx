@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
+"use client";
 import { Lato } from 'next/font/google';
 import './globals.css';
 import BottomNav from '@/components/BottomNav';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from '@/components/Providers';
+import { usePathname } from 'next/navigation';
 
 const lato = Lato({ 
   subsets: ['latin'],
@@ -11,23 +12,23 @@ const lato = Lato({
   variable: '--font-lato',
 });
 
-export const metadata: Metadata = {
-  title: 'NaijaSend - Send Money Home, Fast',
-  description: 'Send money to Nigeria using cNGN on the Celo blockchain',
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  
+  // Hide BottomNav on onboarding page
+  const showBottomNav = pathname !== '/onboarding' && pathname !== '/';
+
   return (
     <html lang="en">
       <body className={lato.className}>
         <Providers>
           <div className="relative min-h-screen">
             {children}
-            <BottomNav />
+            {showBottomNav && <BottomNav />}
             <Toaster />
           </div>
         </Providers>
