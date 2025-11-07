@@ -1,361 +1,482 @@
-"use client"
+"use client";
+import { ArrowRight, Wallet, Shield, Zap, Globe, Phone, Smartphone, Banknote, Lightbulb, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import ImgCoin from "../../assets/coins.png";
 
-import { useState } from "react";
-import { ArrowRight, ArrowLeft, Phone, Zap, CreditCard, X } from "lucide-react";
-
-const OnboardingCarousel = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [showPhoneInput, setShowPhoneInput] = useState(false);
+export default function OnboardingPage() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mounted, setMounted] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isValid, setIsValid] = useState(false);
+  const [error, setError] = useState("");
 
-  const steps = [
+  // Carousel slides content
+  const slides = [
     {
-      title: "Send Money Home, Fast",
-      subtitle: "Transfer naira to any phone number in Nigeria. No bank account needed.",
+      title: "Send Money with Just a Phone Number",
+      description: "Transfer money to anyone in Nigeria instantly using only their phone number. No bank account needed.",
       icon: Phone,
-      color: "#D975BB",
-      illustration: (
-        <div className="relative w-full h-full flex items-center justify-center">
-          <div className="relative w-64 h-64">
-            {/* Phone mockup with money flying */}
-            <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-purple-600 to-pink-500 p-1">
-              <div className="w-full h-full rounded-[36px] bg-white flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="text-4xl font-bold text-purple-900">₦50,000</div>
-                  <div className="text-sm text-gray-600">+234 812 345 6789</div>
-                  <div className="flex justify-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-green-500 animate-pulse" />
-                    <div className="w-8 h-8 rounded-full bg-pink-500 animate-pulse delay-100" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Floating coins */}
-            <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-yellow-400 animate-bounce" />
-            <div className="absolute -bottom-4 -left-4 w-12 h-12 rounded-full bg-green-400 animate-bounce delay-200" />
-          </div>
-        </div>
-      )
+      color: "text-purple-400"
     },
     {
-      title: "Pay Bills Instantly",
-      subtitle: "NEPA, DSTV, Water bills—all in one place. Simple and secure.",
-      icon: Zap,
-      color: "#7056B2",
-      illustration: (
-        <div className="relative w-full h-full flex items-center justify-center">
-          <div className="grid grid-cols-2 gap-4 w-64">
-            {[
-              { name: "NEPA", color: "bg-yellow-500", icon: "⚡" },
-              { name: "DSTV", color: "bg-blue-500", icon: "📺" },
-              { name: "Water", color: "bg-cyan-500", icon: "💧" },
-              { name: "Airtime", color: "bg-green-500", icon: "📱" }
-            ].map((bill, i) => (
-              <div
-                key={bill.name}
-                className={`${bill.color} rounded-2xl p-6 text-white transform hover:scale-105 transition-all cursor-pointer`}
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className="text-3xl mb-2">{bill.icon}</div>
-                <div className="text-sm font-semibold">{bill.name}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
+      title: "Pay Your Bills Easily",
+      description: "Pay NEPA bills, water bills, cable TV and more directly from your phone.",
+      icon: Lightbulb,
+      color: "text-cyan-400"
     },
     {
-      title: "No Bank? No Problem",
-      subtitle: "Use just your phone number. Send and receive money instantly with cNGN.",
-      icon: CreditCard,
-      color: "#261863",
-      illustration: (
-        <div className="relative w-full h-full flex items-center justify-center">
-          <div className="relative">
-            {/* Crossed out bank card */}
-            <div className="relative">
-              <div className="w-72 h-44 rounded-2xl bg-gradient-to-r from-gray-400 to-gray-500 p-6 opacity-40">
-                <div className="text-white text-xs mb-8">TRADITIONAL BANK</div>
-                <div className="flex justify-between items-end">
-                  <div className="text-white text-sm">••••  ••••  ••••  ••••</div>
-                </div>
-              </div>
-              {/* Big X over it */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <X className="w-32 h-32 text-red-500 stroke-[3]" />
-              </div>
-            </div>
-            
-            {/* Phone number card emerging */}
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-64 h-40 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-500 p-6 shadow-2xl transform rotate-3 hover:rotate-0 transition-transform">
-              <div className="text-white space-y-4">
-                <Phone className="w-8 h-8" />
-                <div className="text-2xl font-bold">+234 812 345 6789</div>
-                <div className="text-sm opacity-90">Your wallet address ✨</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
+      title: "Buy Airtime & Data",
+      description: "Recharge airtime and buy data for MTN, Glo, Airtel, and 9mobile instantly.",
+      icon: Smartphone,
+      color: "text-pink-400"
+    },
+    {
+      title: "No Bank Account Required",
+      description: "Join millions of Nigerians using Celo Naija without a traditional bank account.",
+      icon: Banknote,
+      color: "text-blue-400"
+    },
+    {
+      title: "Secure Blockchain Technology",
+      description: "Built on Celo blockchain for maximum security. Your money is safe and fees are low.",
+      icon: Shield,
+      color: "text-green-400"
     }
   ];
 
-  const currentStepData = steps[currentStep];
-  const Icon = currentStepData.icon;
+  useEffect(() => {
+    setMounted(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX - window.innerWidth / 2) / 50;
+      const y = (e.clientY - window.innerHeight / 2) / 50;
+      setMousePosition({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Auto-play carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleGetStarted = () => {
-    setShowPhoneInput(true);
+    setShowModal(true);
   };
 
-  const handlePhoneSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (phoneNumber.length >= 10) {
-      // Navigate to main app
-      window.location.href = "/";
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+    
+    // Limit to 11 digits
+    if (value.length > 11) {
+      value = value.slice(0, 11);
     }
-  };
-
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+    
+    setPhoneNumber(value);
+    
+    // Validate Nigerian phone number (starts with 070, 080, 081, 090, 091 etc.)
+    const nigerianPhoneRegex = /^(0)(7|8|9)(0|1)\d{8}$/;
+    
+    if (value.length === 11 && nigerianPhoneRegex.test(value)) {
+      setIsValid(true);
+      setError("");
+    } else if (value.length === 11) {
+      setIsValid(false);
+      setError("Please enter a valid Nigerian phone number");
     } else {
-      handleGetStarted();
+      setIsValid(false);
+      setError("");
     }
   };
 
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+  const handleSubmit = () => {
+    if (isValid) {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("onboarding_completed", "true");
+        localStorage.setItem("user_phone", phoneNumber);
+      }
+      // Redirect or next step
+      alert(`Welcome to Celo Naija! Phone: ${phoneNumber}`);
+      setShowModal(false);
     }
   };
+
+  const formatPhoneNumber = (value: string) => {
+    if (value.length <= 4) return value;
+    if (value.length <= 7) return `${value.slice(0, 4)} ${value.slice(4)}`;
+    return `${value.slice(0, 4)} ${value.slice(4, 7)} ${value.slice(7)}`;
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const CurrentIcon = slides[currentSlide].icon;
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Purple gradient background from design.json */}
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden py-8 sm:py-12 lg:py-16">
+      {/* Gradient Background with mesh pattern */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: "linear-gradient(180deg, #131B63 0%, #481162 100%)",
+          background: "linear-gradient(180deg, #0A0E27 0%, #1A0B2E 50%, #2D1B4E 100%)",
         }}
       />
 
-      {/* Decorative circles */}
+      {/* Animated Grid Pattern Overlay */}
       <div 
-        className="absolute top-20 left-20 w-64 h-64 rounded-full opacity-20 blur-3xl"
-        style={{ background: "#D975BB" }}
-      />
-      <div 
-        className="absolute bottom-20 right-20 w-96 h-96 rounded-full opacity-15 blur-3xl"
-        style={{ background: "#7056B2" }}
+        className="absolute inset-0 z-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+          animation: 'gridMove 20s linear infinite',
+        }}
       />
 
-      {/* Phone Input Modal */}
-      {showPhoneInput && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
-            <button
-              onClick={() => setShowPhoneInput(false)}
-              className="float-right text-gray-400 hover:text-gray-600"
+      {/* Floating particles/orbs */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-ping" style={{ animationDuration: '3s' }} />
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-cyan-400 rounded-full animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+        <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-pink-400 rounded-full animate-ping" style={{ animationDuration: '5s', animationDelay: '2s' }} />
+        <div className="absolute bottom-1/3 right-1/4 w-1 h-1 bg-blue-400 rounded-full animate-ping" style={{ animationDuration: '4s', animationDelay: '0.5s' }} />
+      </div>
+
+      {/* Gradient orbs */}
+      <div className="hidden lg:block absolute top-20 left-20 w-96 h-96 rounded-full bg-purple-600/10 blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
+      <div className="hidden lg:block absolute bottom-20 right-20 w-96 h-96 rounded-full bg-cyan-600/10 blur-3xl animate-pulse" style={{ animationDuration: '10s' }} />
+
+      {/* Main Container */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-14">
+          
+          {/* Left Section - Text Content */}
+          <div className="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1 px-2 sm:px-4">
+            {/* Web3 Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm mb-4 sm:mb-5">
+              <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-xs sm:text-sm font-medium text-purple-200">Built on Celo Blockchain</span>
+            </div>
+
+            {/* Main Heading with gradient text */}
+            <h1
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl leading-tight mb-4 sm:mb-5"
+              style={{
+                fontFamily: "Lato, sans-serif",
+                fontWeight: 800,
+                background: "linear-gradient(135deg, #FFFFFF 0%, #E0E0FF 50%, #C4B5FD 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
             >
-              <X className="w-6 h-6" />
-            </button>
-            
-            <h2 className="text-2xl font-bold text-[#261863] mb-2">
-              Welcome to NaijaSend
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Enter your phone number to get started
-            </p>
+              Banking Made Simple for Nigerians
+            </h1>
 
-            <form onSubmit={handlePhoneSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
-                </label>
-                <div className="flex gap-2">
-                  <div className="flex items-center px-3 py-3 bg-gray-100 rounded-lg">
-                    <span className="text-lg font-medium text-gray-700">+234</span>
+            {/* Carousel Section */}
+            <div className="relative mb-6 sm:mb-8">
+              {/* Carousel Content */}
+              <div className="min-h-[110px] sm:min-h-[100px]">
+                <div className="flex items-start gap-3 mb-3 sm:mb-4">
+                  <div className={`p-2 sm:p-2.5 rounded-lg bg-white/5 border border-white/10 backdrop-blur-sm ${slides[currentSlide].color} flex-shrink-0`}>
+                    <CurrentIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
-                  <input
-                    type="tel"
-                    placeholder="812 345 6789"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    className="flex-1 px-4 py-3 text-lg border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none"
-                    maxLength={10}
-                  />
+                  <div className="flex-1">
+                    <h3 
+                      className="text-base sm:text-lg lg:text-xl font-bold text-white mb-1.5 sm:mb-2 transition-all duration-500"
+                      style={{ fontFamily: "Lato, sans-serif" }}
+                    >
+                      {slides[currentSlide].title}
+                    </h3>
+                    <p 
+                      className="text-xs sm:text-sm text-gray-300 leading-relaxed transition-all duration-500"
+                      style={{ fontFamily: "Lato, sans-serif" }}
+                    >
+                      {slides[currentSlide].description}
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={phoneNumber.length < 10}
-                className="w-full py-4 rounded-full text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
+              {/* Carousel Controls */}
+              <div className="flex items-center justify-center lg:justify-start gap-3 sm:gap-4">
+                {/* Navigation Arrows */}
+                <button
+                  onClick={prevSlide}
+                  className="p-1.5 sm:p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-sm transition-all duration-300"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </button>
+
+                {/* Dots Indicators */}
+                <div className="flex gap-1.5 sm:gap-2">
+                  {slides.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentSlide(index)}
+                      className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
+                        index === currentSlide 
+                          ? 'w-6 sm:w-8 bg-purple-400' 
+                          : 'w-1.5 sm:w-2 bg-white/30 hover:bg-white/50'
+                      }`}
+                      aria-label={`Go to slide ${index + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={nextSlide}
+                  className="p-1.5 sm:p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-sm transition-all duration-300"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                </button>
+              </div>
+            </div>
+
+            {/* Get Started Button with glassmorphism */}
+            <button
+              onClick={handleGetStarted}
+              className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:-translate-y-0.5 active:scale-100 active:translate-y-0 w-full sm:w-auto mx-auto lg:mx-0 border border-purple-400/30"
+              style={{
+                background: "linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%)",
+                boxShadow: "0 8px 32px rgba(139, 92, 246, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2)",
+                backdropFilter: "blur(10px)",
+                fontFamily: "Lato, sans-serif",
+                fontWeight: 600,
+                fontSize: "15px",
+                color: "#FFFFFF",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, rgba(124, 58, 237, 0.9) 0%, rgba(37, 99, 235, 0.9) 100%)";
+                e.currentTarget.style.boxShadow =
+                  "0 12px 40px rgba(139, 92, 246, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%)";
+                e.currentTarget.style.boxShadow =
+                  "0 8px 32px rgba(139, 92, 246, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2)";
+              }}
+            >
+              <span
+                className="flex items-center justify-center rounded-full bg-white/25 backdrop-blur-sm p-2 sm:p-2.5 transition-all duration-300 group-hover:rotate-12 group-hover:bg-white/35 flex-shrink-0"
+                style={{ width: "36px", height: "36px" }}
+              >
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </span>
+              <span className="whitespace-nowrap">Get Started</span>
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+            </button>
+
+            {/* Trust indicators with icons */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 mt-5 sm:mt-6 text-xs sm:text-sm text-gray-400">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400" />
+                <span>100% Secure</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
+                <span>Instant Transfer</span>
+              </div>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-purple-400 font-bold text-sm sm:text-base">₦</span>
+                <span>Low Fees</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Section - Image */}
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end order-1 lg:order-2">
+            <div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[450px] xl:max-w-[550px]">
+              {/* Hexagon border effect */}
+              <div className="absolute inset-0 opacity-30 blur-sm scale-110" 
+                   style={{
+                     background: "linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3))",
+                     clipPath: "polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)"
+                   }}
+              />
+              
+              {/* Image with cursor tracking */}
+              <img
+                src={ImgCoin.src}
+                alt="Crypto currencies"
+                className="relative w-full h-auto object-contain transition-all duration-200 ease-out"
                 style={{
-                  background: "linear-gradient(135deg, #FFFFFF 0%, #B971A3 50%, #A03E82 100%)",
-                  boxShadow: "0px 10px 22px rgba(35,21,97,0.14)",
+                  filter: "drop-shadow(0 20px 60px rgba(139, 92, 246, 0.4)) drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3))",
+                  transform: mounted && window.innerWidth >= 1024 
+                    ? `translate(${mousePosition.x}px, ${mousePosition.y}px)`
+                    : 'none',
+                }}
+              />
+              
+              {/* Rotating ring effect */}
+              <div 
+                className="absolute inset-0 -z-10 opacity-40"
+                style={{
+                  background: "conic-gradient(from 0deg, transparent, rgba(139, 92, 246, 0.4), transparent)",
+                  animation: "rotate 10s linear infinite",
+                  borderRadius: "50%",
+                  filter: "blur(20px)",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Phone Number Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
+          <div 
+            className="relative w-full max-w-md bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-purple-400/20 p-5 sm:p-6 lg:p-8"
+            style={{
+              animation: "modalSlideIn 0.3s ease-out"
+            }}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300"
+              aria-label="Close modal"
+            >
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </button>
+
+            {/* Modal Header */}
+            <div className="text-center mb-5 sm:mb-6">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
+                <Phone className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              </div>
+              <h2 
+                className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5 sm:mb-2"
+                style={{
+                  fontFamily: "Lato, sans-serif",
+                  background: "linear-gradient(135deg, #FFFFFF 0%, #E0E0FF 50%, #C4B5FD 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
               >
-                Continue
-              </button>
-            </form>
+                Welcome to Celo Naija
+              </h2>
+              <p className="text-gray-400 text-xs sm:text-sm">
+                Enter your phone number to get started
+              </p>
+            </div>
+
+            {/* Phone Input */}
+            <div className="mb-5 sm:mb-6">
+              <label className="block text-xs sm:text-sm font-medium text-gray-300 mb-2">
+                Phone Number
+              </label>
+              <div className="relative">
+                <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 sm:gap-2 text-gray-400">
+                  <span className="text-base sm:text-lg">🇳🇬</span>
+                  <span className="text-xs sm:text-sm">+234</span>
+                </div>
+                <input
+                  type="tel"
+                  value={formatPhoneNumber(phoneNumber)}
+                  onChange={handlePhoneChange}
+                  placeholder="0803 456 7890"
+                  maxLength={13}
+                  className="w-full pl-20 sm:pl-24 pr-3 sm:pr-4 py-3 sm:py-4 bg-white/5 border-2 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-400 transition-all duration-300 text-sm sm:text-base"
+                  style={{
+                    fontFamily: "Lato, sans-serif",
+                    borderColor: error ? "#ef4444" : isValid ? "#35D07F" : "rgba(255,255,255,0.1)"
+                  }}
+                />
+                {isValid && (
+                  <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-green-500 flex items-center justify-center">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {error && (
+                <p className="mt-2 text-xs sm:text-sm text-red-400">{error}</p>
+              )}
+              {!error && phoneNumber.length > 0 && !isValid && (
+                <p className="mt-2 text-xs sm:text-sm text-gray-400">
+                  Enter 11 digits starting with 070, 080, 081, 090, or 091
+                </p>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              onClick={handleSubmit}
+              disabled={!isValid}
+              className="w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                fontFamily: "Lato, sans-serif",
+                background: isValid 
+                  ? "linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%)"
+                  : "rgba(255,255,255,0.1)",
+                color: isValid ? "#FFFFFF" : "#6B7280",
+                boxShadow: isValid ? "0 4px 20px rgba(139, 92, 246, 0.3)" : "none"
+              }}
+            >
+              Continue
+            </button>
+
+            {/* Info text */}
+            <p className="mt-3 sm:mt-4 text-center text-xs text-gray-500">
+              By continuing, you agree to our Terms & Privacy Policy
+            </p>
           </div>
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
-          
-          {/* Left Section - Content */}
-          <div className="w-full lg:w-1/2 text-center lg:text-left space-y-8">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm border-2"
-                 style={{ 
-                   backgroundColor: "rgba(217, 117, 187, 0.1)",
-                   borderColor: "#D975BB"
-                 }}>
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "#D975BB" }} />
-              <span className="text-sm font-semibold" style={{ color: "#D975BB" }}>
-                Mobile-First Wallet
-              </span>
-            </div>
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes gridMove {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(50px);
+          }
+        }
+        
+        @keyframes rotate {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
 
-            {/* Step Indicator */}
-            <div className="flex justify-center lg:justify-start gap-2">
-              {steps.map((_, index) => (
-                <div
-                  key={index}
-                  className="h-1 rounded-full transition-all duration-300"
-                  style={{
-                    width: index === currentStep ? "32px" : "8px",
-                    backgroundColor: index === currentStep ? "#D975BB" : "rgba(255, 255, 255, 0.3)"
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Icon */}
-            <div className="flex justify-center lg:justify-start">
-              <div 
-                className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                style={{
-                  background: `linear-gradient(135deg, ${currentStepData.color}, #7056B2)`,
-                }}
-              >
-                <Icon className="w-8 h-8 text-white" />
-              </div>
-            </div>
-
-            {/* Title */}
-            <h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl leading-tight"
-              style={{
-                fontFamily: "Lato, sans-serif",
-                fontWeight: 800,
-                color: "#FFFFFF",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {currentStepData.title}
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              className="text-lg lg:text-xl leading-relaxed max-w-xl mx-auto lg:mx-0"
-              style={{
-                fontFamily: "Lato, sans-serif",
-                fontWeight: 400,
-                color: "rgba(255, 255, 255, 0.8)",
-              }}
-            >
-              {currentStepData.subtitle}
-            </p>
-
-            {/* Navigation Buttons */}
-            <div className="flex gap-4 justify-center lg:justify-start pt-4">
-              {currentStep > 0 && (
-                <button
-                  onClick={prevStep}
-                  className="px-8 py-4 rounded-full font-bold text-white border-2 border-white/20 hover:bg-white/10 transition-all"
-                  style={{
-                    fontFamily: "Lato, sans-serif",
-                  }}
-                >
-                  <ArrowLeft className="w-5 h-5" />
-                </button>
-              )}
-              
-              <button
-                onClick={nextStep}
-                className="flex-1 lg:flex-initial px-8 py-4 rounded-full font-bold text-white transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
-                style={{
-                  background: "linear-gradient(135deg, #FFFFFF 0%, #B971A3 50%, #A03E82 100%)",
-                  boxShadow: "0px 10px 22px rgba(35,21,97,0.14)",
-                  fontFamily: "Lato, sans-serif",
-                }}
-              >
-                {currentStep === steps.length - 1 ? "Get Started" : "Next"}
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Skip button */}
-            <button
-              onClick={handleGetStarted}
-              className="text-white/60 hover:text-white text-sm font-medium transition-colors"
-            >
-              Skip for now →
-            </button>
-          </div>
-
-          {/* Right Section - Illustration */}
-          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-md lg:max-w-lg h-96">
-              {/* Glow effect */}
-              <div 
-                className="absolute inset-0 rounded-full opacity-30 blur-3xl"
-                style={{
-                  background: `radial-gradient(circle, ${currentStepData.color}, transparent)`,
-                }}
-              />
-              
-              {/* Illustration */}
-              <div className="relative h-full">
-                {currentStepData.illustration}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Navigation Preview */}
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20">
-          <div 
-            className="flex items-center gap-6 px-8 py-4 rounded-full backdrop-blur-md"
-            style={{
-              background: "linear-gradient(180deg, #261863 0%, #2E2169 100%)",
-              boxShadow: "0px 20px 48px rgba(35,21,97,0.18)",
-            }}
-          >
-            {[
-              { icon: "🏠", label: "Home" },
-              { icon: "💸", label: "Send" },
-              { icon: "⚡", label: "Bills" },
-              { icon: "👤", label: "Profile" }
-            ].map((item, i) => (
-              <div
-                key={item.label}
-                className="flex flex-col items-center gap-1 px-3 opacity-70 hover:opacity-100 transition-opacity cursor-pointer"
-              >
-                <div className="text-2xl">{item.icon}</div>
-                <div className="text-xs text-white font-medium">{item.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      `}</style>
     </div>
   );
-};
-
-export default OnboardingCarousel;
+}
