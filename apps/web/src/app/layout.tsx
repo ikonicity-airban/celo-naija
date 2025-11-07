@@ -12,7 +12,7 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: 'NaijaSend - Send Money Home, Fast',
+  title: 'Celo Naija - Send Money Home, Fast',
   description: 'Send money to Nigeria using cNGN on the Celo blockchain',
 };
 
@@ -27,7 +27,6 @@ export default function RootLayout({
         <Providers>
           <div className="relative min-h-screen">
             {children}
-            <BottomNav />
             <Toaster />
           </div>
         </Providers>

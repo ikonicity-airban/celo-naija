@@ -205,7 +205,7 @@ export default function OnboardingPage() {
                 backgroundClip: "text",
               }}
             >
-              Banking Made Simple for Nigerians
+              {slides[currentSlide].title}
             </h1>
 
             {/* Carousel Section */}
