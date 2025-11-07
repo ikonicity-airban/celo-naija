@@ -221,14 +221,14 @@ export default function OnboardingPage() {
                       className="text-base sm:text-lg lg:text-xl font-bold text-white mb-1.5 sm:mb-2 transition-all duration-500"
                       style={{ fontFamily: "Lato, sans-serif" }}
                     >
-                      {slides[currentSlide].title}
+                      {slides[currentSlide].description}
                     </h3>
-                    <p 
+                    {/* <p 
                       className="text-xs sm:text-sm text-gray-300 leading-relaxed transition-all duration-500"
                       style={{ fontFamily: "Lato, sans-serif" }}
                     >
                       {slides[currentSlide].description}
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </div>

@@ -1,43 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import BalanceCard from "@/components/BalanceCard";
 import TransactionListItem from "@/components/TransactionListItem";
 import { Button } from "@/components/ui/button";
 import { Bell, TrendingUp } from "lucide-react";
-import { hasUser, getUserPhone, getOrCreateUser } from "@/lib/auth";
 
 export default function Home() {
   const router = useRouter();
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-
-  // Check authentication on mount
-  useEffect(() => {
-    const checkAuth = async () => {
-      // Check if user exists
-      if (!hasUser()) {
-        router.push("/onboarding");
-        return;
-      }
-
-      // Verify user exists in database
-      const phone = getUserPhone();
-      if (phone) {
-        const user = await getOrCreateUser(phone);
-        if (!user) {
-          // If user doesn't exist in DB, redirect to onboarding
-          router.push("/onboarding");
-          return;
-        }
-      }
-
-      setIsCheckingAuth(false);
-    };
-
-    checkAuth();
-  }, [router]);
 
   // Mock data for now - replace with real API calls
   const balance = { cNGN: 150000, ngn: 247500000 };
@@ -45,7 +15,7 @@ export default function Home() {
     {
       id: "1",
       type: "sent" as const,
-      recipient: "Chidi Okafor",
+      recipient: "Chidi Okafor",    
       recipientPhone: "8123456789",
       amountNGN: "50000",
       status: "completed" as const,
@@ -71,17 +41,6 @@ export default function Home() {
     },
   ];
 
-  // Show loading state while checking auth
-  if (isCheckingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-body text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen pb-24">
       {/* Gradient Background */}
@@ -103,9 +62,9 @@ export default function Home() {
           >
             <div className="flex items-center justify-between p-4">
               <div>
-                <h1 className="text-h1">NaijaSend</h1>
+                <h1 className="text-h1">Celo Naija</h1>
                 <p className="text-caption text-muted-foreground">
-                  Send money home, fast
+                Remit, pay bills, buy airtime & data – all with your phone number
                 </p>
               </div>
               <Button
