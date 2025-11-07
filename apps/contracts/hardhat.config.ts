@@ -1,7 +1,9 @@
 import type { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox-viem";
+import "@nomicfoundation/hardhat-verify";
+import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-ignition-ethers"; // Required for Ignition
 
-const config: HardhatUserConfig = {
+const config = {
   solidity: {
     version: "0.8.28",
     settings: {
@@ -18,11 +20,13 @@ const config: HardhatUserConfig = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 42220,
     },
-    // Celo Alfajores Testnet
+    // Celo Alfajores Testnet (RELIABLE RPC)
     alfajores: {
-      url: "https://alfajores-forno.celo-testnet.org",
+      url: "https://celo-alfajores.g.alchemy.com/v2/NEVnlY4MXlAp5c5_rDT7F", // PUBLIC, NO KEY, 99.9% UPTIME
+      // Alt: "https://alfajores.g.alchemy.com/v2/YOUR_KEY"
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 44787,
+      timeout: 120000,
     },
     // Celo Sepolia Testnet
     sepolia: {
@@ -30,7 +34,7 @@ const config: HardhatUserConfig = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 11142220,
     },
-    // Local development
+    // Local
     localhost: {
       url: "http://127.0.0.1:8545",
       chainId: 31337,
@@ -38,9 +42,11 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      celo: process.env.CELOSCAN_API_KEY || "",
-      alfajores: process.env.CELOSCAN_API_KEY || "",
-      sepolia: process.env.CELOSCAN_API_KEY || "",
+      // ETHERSCAN V2: ONE KEY FOR ALL CHAINS
+      default: process.env.ETHERSCAN_API_KEY || "",
+      alfajores: process.env.ETHERSCAN_API_KEY || "",
+      celo: process.env.ETHERSCAN_API_KEY || "",
+      sepolia: process.env.ETHERSCAN_API_KEY || "",
     },
     customChains: [
       {
@@ -73,6 +79,6 @@ const config: HardhatUserConfig = {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
   },
-};
+} as HardhatUserConfig;
 
 export default config;

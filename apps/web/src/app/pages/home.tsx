@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import BalanceCard from "@/components/BalanceCard";
 import TransactionListItem from "@/components/TransactionListItem";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 
 export default function Home() {
-  const router = useRouter();
+  const [, setLocation] = useLocation();
 
   // Fetch user balance
   const { data: balanceData } = useQuery({
@@ -48,9 +48,9 @@ export default function Home() {
           <BalanceCard
             balanceCNGN={balance.cNGN}
             balanceNGN={balance.ngn}
-            onSend={() => router.push("/send")}
+            onSend={() => setLocation("/send")}
             onReceive={() => console.log("Receive clicked")}
-            onBuyAirtime={() => router.push("/send")}
+            onBuyAirtime={() => setLocation("/send")}
           />
 
           <div>
@@ -59,7 +59,7 @@ export default function Home() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => router.push("/activity")}
+                onClick={() => setLocation("/activity")}
                 data-testid="button-view-all"
               >
                 View All
