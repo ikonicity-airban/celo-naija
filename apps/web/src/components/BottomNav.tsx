@@ -1,5 +1,7 @@
+"use client";
+
 import { Home, Send, Clock, User } from "lucide-react";
-import { useLocation } from "wouter";
+import { usePathname, useRouter } from "next/navigation";
 
 interface NavItem {
   icon: typeof Home;
@@ -15,21 +17,22 @@ const navItems: NavItem[] = [
 ];
 
 export default function BottomNav() {
-  const [location, setLocation] = useLocation();
+  const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
       <div className="max-w-mobile mx-auto flex justify-around items-center h-18 pb-safe">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = location === item.path;
+          const isActive = pathname === item.path;
 
           return (
             <button
               key={item.path}
-              onClick={() => setLocation(item.path)}
+              onClick={() => router.push(item.path)}
               data-testid={`nav-${item.label.toLowerCase()}`}
-              className={`flex flex-col items-center justify-center flex-1 h-full gap-1 hover-elevate active-elevate-2 ${
+              className={`flex flex-col items-center justify-center flex-1 h-full gap-1 hover-elevate active-elevate-2 transition-colors ${
                 isActive ? "text-primary" : "text-muted-foreground"
               }`}
             >
