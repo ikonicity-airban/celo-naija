@@ -1,294 +1,490 @@
 {
-    "elementStyling": {
-      "DO_NOT": [
-        "DO NOT apply card gradients to icons or buttons",
-        "DO NOT use primary button colors on secondary buttons or text",
-        "DO NOT apply shadows to inline text or small icons",
-        "DO NOT use gradient fills on icon SVGs",
-        "DO NOT apply border radius >24px to action cards",
-        "DO NOT use text colors from gradients as background fills"
+    "meta": {
+      "sourceImages": [
+        "/mnt/data/02.jpg",
+        "/mnt/data/03.jpg",
+        "/mnt/data/03 (1).jpg",
+        "/mnt/data/Screen 2.jpg",
+        "/mnt/data/Fonts_and_Colors.png"
       ],
-      "typography": {
+      "primaryFont": {
+        "family": "Lato",
+        "weights": [400, 500, 600, 700, 800],
+        "notes": "Use Lato for headings and UI; ExtraBold for large hero numbers; Medium/Regular for body text."
+      },
+      "designScale": {
+        "baseSpacing": 8,
+        "mobileBase": 375
+      }
+    },
+  
+    "colorPalette": {
+      "primary": {
+        "pink": "#D975BB",
+        "deepViolet": "#261863",
+        "navy": "#171532"
+      },
+      "secondary": {
+        "mutedGrayPurple": "#747384",
+        "softLavender": "#A8A3C1",
+        "vividPurple": "#7056B2"
+      },
+      "gradientSets": {
+        "gradientA_left": {
+          "description": "deep blue -> deep purple vertical gradient used for hero/left-screen backgrounds",
+          "type": "linear",
+          "direction": "180deg",
+          "stops": [
+            { "offset": "0%", "color": "#131B63" },
+            { "offset": "100%", "color": "#481162" }
+          ]
+        },
+        "gradientB_center": {
+          "description": "pink -> magenta multi-stop gradient used for call-to-action buttons and circular CTA icons",
+          "type": "linear",
+          "direction": "135deg",
+          "stops": [
+            { "offset": "0%", "color": "#FFFFFF" },
+            { "offset": "50%", "color": "#B971A3" },
+            { "offset": "100%", "color": "#A03E82" }
+          ]
+        },
+        "gradientC_right": {
+          "description": "violet -> indigo gradient used for cards, icon containers and bottom nav background accents",
+          "type": "linear",
+          "direction": "180deg",
+          "stops": [
+            { "offset": "0%", "color": "#8462E1" },
+            { "offset": "60%", "color": "#55389B" },
+            { "offset": "100%", "color": "#A03E82" }
+          ]
+        }
+      },
+      "neutrals": {
+        "white": "#FFFFFF",
+        "offWhite1": "#FBFBFD",
+        "offWhite2": "#F8F6FB",
+        "lightLavender": "#EBE2FF",
+        "mutedLilac": "#CCBCEB",
+        "textDark": "#171532",
+        "textMuted": "#747384"
+      },
+      "accentSamplesFromArtwork": {
+        "samplePurple1": "#997ACA",
+        "sampleLilac": "#A990D4",
+        "sampleDeepPurple": "#261863"
+      }
+    },
+  
+    "typographyRules": {
+      "h1": {
         "fontFamily": "Lato",
-        "weights": {
-          "ExtraBold": 800,
-          "Bold": 700,
-          "SemiBold": 600,
-          "Medium": 500,
-          "Regular": 400
-        },
-        "hierarchy": {
-          "greeting": {
-            "size": "32px",
-            "weight": "ExtraBold",
-            "color": "#D975BB",
-            "context": "Welcome header (user name)"
-          },
-          "pageTitle": {
-            "size": "28px",
-            "weight": "Bold",
-            "color": "#171532",
-            "context": "Main screen titles (e.g., 'Welcome Back!')"
-          },
-          "sectionHeader": {
-            "size": "20px",
-            "weight": "SemiBold",
-            "color": "#171532",
-            "context": "Actions, Top Movers"
-          },
-          "cardValue": {
-            "size": "36px",
-            "weight": "Bold",
-            "color": "#FFFFFF",
-            "context": "Portfolio balance ($12,670.90)"
-          },
-          "cardChange": {
-            "size": "16px",
-            "weight": "Medium",
-            "color": "#FFFFFF",
-            "opacity": 0.9,
-            "context": "↑ 2.70% Today"
-          },
-          "actionLabel": {
-            "size": "18px",
-            "weight": "SemiBold",
-            "color": "#FFFFFF",
-            "context": "Receive, Send, Swap"
-          },
-          "metricValue": {
-            "size": "18px",
-            "weight": "SemiBold",
-            "color": "#171532",
-            "context": "+34.98%, +66.25%"
-          },
-          "metricLabel": {
-            "size": "14px",
-            "weight": "Regular",
-            "color": "#747384",
-            "context": "BTC $21.58"
-          },
-          "navLabel": {
-            "size": "12px",
-            "weight": "Medium",
-            "color": "#A8A3C1",
-            "context": "Home, Wallets, Market, Settings"
-          },
-          "activeNavLabel": {
-            "size": "12px",
-            "weight": "SemiBold",
-            "color": "#D975BB",
-            "context": "Active tab (Home)"
-          }
-        }
+        "weight": 800,
+        "size": "36px",
+        "lineHeight": "44px",
+        "color": "#171532",
+        "selectorContext": "screen-hero, page-heading"
       },
-      "colors": {
-        "palette": {
-          "primary": {
-            "main": "#D975BB",
-            "dark": "#261863",
-            "darker": "#171532"
-          },
-          "secondary": {
-            "gray": "#747384",
-            "lightGray": "#A8A3C1",
-            "purple": "#7056B2"
-          },
-          "gradients": {
-            "cardHeader": {
-              "type": "linear",
-              "angle": "135deg",
-              "stops": [
-                { "offset": "0%", "color": "#131B63" },
-                { "offset": "50%", "color": "#481162" },
-                { "offset": "100%", "color": "#A03582" }
-              ],
-              "context": "Portfolio balance card background"
-            },
-            "onboarding": {
-              "type": "linear",
-              "angle": "180deg",
-              "stops": [
-                { "offset": "0%", "color": "#B971A3" },
-                { "offset": "100%", "color": "#A03582" }
-              ],
-              "context": "Onboarding screen main background"
-            },
-            "buttonPrimary": {
-              "type": "linear",
-              "angle": "90deg",
-              "stops": [
-                { "offset": "0%", "color": "#8462E1" },
-                { "offset": "100%", "color": "#55389B" }
-              ],
-              "context": "Get Started button background"
-            }
-          },
-          "background": {
-            "app": "#FFFFFF",
-            "card": "#FFFFFF",
-            "navBar": "#171532",
-            "onboardingOverlay": "rgba(255,255,255,0.95)"
-          }
-        }
+      "h2": {
+        "fontFamily": "Lato",
+        "weight": 700,
+        "size": "24px",
+        "lineHeight": "32px",
+        "color": "#261863",
+        "selectorContext": "component-title, card-title"
       },
-      "shadows": {
-        "card": "0 8px 24px rgba(23, 21, 50, 0.12)",
-        "button": "0 4px 12px rgba(215, 117, 187, 0.3)",
-        "floatingAction": "0 12px 32px rgba(23, 21, 50, 0.2)",
-        "context": "Only applied to elevated containers, never to text or icons"
+      "body": {
+        "fontFamily": "Lato",
+        "weight": 400,
+        "size": "14px",
+        "lineHeight": "20px",
+        "color": "#747384",
+        "selectorContext": "paragraph, small-text"
       },
-      "borderRadius": {
-        "card": "24px",
-        "actionTile": "20px",
-        "button": "16px",
-        "navBar": "32px",
-        "metricCard": "16px",
-        "context": "Larger radius = higher hierarchy"
+      "ctaNumber": {
+        "fontFamily": "Lato",
+        "weight": 800,
+        "size": "32px",
+        "color": "#FFFFFF",
+        "selectorContext": "large-balance, hero-number"
       },
-      "components": {
-        "portfolioCard": {
-          "background": "linear-gradient(135deg, #131B63 0%, #481162 50%, #A03582 100%)",
-          "border": "none",
-          "borderRadius": "24px",
-          "padding": "24px",
-          "shadow": "0 8px 24px rgba(23, 21, 50, 0.12)",
-          "iconContainer": {
-            "background": "rgba(255, 255, 255, 0.2)",
-            "borderRadius": "50%",
-            "size": "56px",
-            "iconFill": "#FFFFFF"
-          },
-          "addButton": {
-            "background": "#D975BB",
-            "borderRadius": "50%",
-            "size": "40px",
-            "iconFill": "#FFFFFF",
-            "shadow": "0 4px 12px rgba(215, 117, 187, 0.3)"
-          }
-        },
-        "actionTiles": {
-          "receive": {
-            "background": "#D975BB",
-            "borderRadius": "20px",
-            "padding": "20px",
-            "iconFill": "#FFFFFF",
-            "label": {
-              "color": "#FFFFFF",
-              "weight": "SemiBold"
-            },
-            "arrowIcon": "#FFFFFF"
-          },
-          "send": {
-            "background": "#261863",
-            "borderRadius": "20px",
-            "padding": "20px",
-            "iconFill": "#FFFFFF",
-            "label": {
-              "color": "#FFFFFF",
-              "weight": "SemiBold"
-            },
-            "arrowIcon": "#FFFFFF"
-          },
-          "swap": {
-            "background": "#A8A3C1",
-            "borderRadius": "20px",
-            "padding": "20px",
-            "iconFill": "#FFFFFF",
-            "label": {
-              "color": "#FFFFFF",
-              "weight": "SemiBold"
-            },
-            "arrowIcon": "#FFFFFF"
-          }
-        },
-        "metricCards": {
+      "mutedSmall": {
+        "fontFamily": "Lato",
+        "weight": 500,
+        "size": "12px",
+        "color": "#A8A3C1",
+        "selectorContext": "microcopy, labels"
+      }
+    },
+  
+    "globalRadii": {
+      "cornerXL": "32px",
+      "cornerL": "24px",
+      "cornerM": "16px",
+      "cornerS": "8px",
+      "notes": "Mobile-heavy rounded corners. nav-pill uses cornerXL, cards use cornerL or cornerM."
+    },
+  
+    "shadowSystem": {
+      "elevation1": {
+        "usage": "soft ambient shadow under floating cards and hero containers",
+        "value": "0px 18px 36px rgba(38, 24, 99, 0.12)",
+        "selectorContext": "full-screen-left-hero, main-card, hero-card"
+      },
+      "elevation2": {
+        "usage": "subtle shadow for small floating CTAs or icon buttons",
+        "value": "0px 8px 18px rgba(35, 21, 97, 0.10)",
+        "selectorContext": "circular-cta, plus-action"
+      },
+      "elevationInset": {
+        "usage": "slight inner shadow on bottom navigation pocket",
+        "value": "inset 0px 6px 18px rgba(35, 21, 97, 0.06)",
+        "selectorContext": "bottom-nav-pouch"
+      }
+    },
+  
+    "elementStyling": {
+      "cards": {
+        "defaultCard": {
+          "selector": ".card, .list-card, .stat-card",
           "background": "#FFFFFF",
-          "borderRadius": "16px",
+          "border": "1px solid rgba(168,163,193,0.06)",
+          "shadow": "0px 18px 36px rgba(38,24,99,0.08)",
+          "borderRadius": "24px",
           "padding": "16px",
-          "shadow": "0 4px 12px rgba(23, 21, 50, 0.06)",
-          "trendLine": {
-            "positive": "#D975BB",
-            "negative": "#747384"
-          }
-        },
-        "navigationBar": {
-          "background": "#171532",
-          "borderRadius": "32px",
-          "height": "80px",
-          "padding": "16px 24px",
-          "inactiveIcon": "#A8A3C1",
-          "activeIcon": "#D975BB",
-          "activeIndicator": {
-            "background": "#D975BB",
-            "height": "4px",
-            "borderRadius": "2px"
-          }
-        },
-        "buttons": {
-          "primary": {
-            "default": {
-              "background": "linear-gradient(90deg, #8462E1 0%, #55389B 100%)",
-              "text": "#FFFFFF",
-              "borderRadius": "16px",
-              "padding": "16px 32px",
-              "shadow": "0 4px 12px rgba(132, 98, 225, 0.3)"
-            },
-            "hover": {
-              "background": "linear-gradient(90deg, #7056B2 0%, #45307D 100%)",
-              "transform": "translateY(-2px)",
-              "shadow": "0 8px 20px rgba(132, 98, 225, 0.4)"
-            },
-            "pressed": {
-              "transform": "translateY(0px)",
-              "shadow": "0 2px 8px rgba(132, 98, 225, 0.3)"
-            }
+          "contentText": {
+            "title": { "color": "#261863", "weight": 700 },
+            "description": { "color": "#747384", "weight": 400 }
           },
-          "iconButton": {
-            "background": "transparent",
-            "iconFill": "#A8A3C1",
-            "hover": {
-              "iconFill": "#D975BB"
-            }
+          "iconSlot": {
+            "background": "none",
+            "fill": "#7056B2",
+            "borderRadius": "12px"
           }
         },
-        "onboardingScreen": {
-          "background": "linear-gradient(180deg, #B971A3 0%, #A03582 100%)",
-          "overlayCard": {
-            "background": "rgba(255, 255, 255, 0.95)",
-            "borderRadius": "24px",
-            "backdropFilter": "blur(12px)",
-            "shadow": "0 12px 32px rgba(169, 53, 130, 0.2)"
+        "accentCard": {
+          "selector": ".balance-card, .hero-card",
+          "background": "linear-gradient(180deg, #261863 0%, #2E2169 100%)",
+          "border": "none",
+          "shadow": "0px 24px 48px rgba(38,24,99,0.16)",
+          "borderRadius": "28px",
+          "contentText": {
+            "largeNumber": { "color": "#FFFFFF", "weight": 800 },
+            "smallNote": { "color": "#D975BB", "weight": 600 }
+          },
+          "decorativeImage": {
+            "placement": "right-side-overflow",
+            "notes": "3D coin illustration overlays right side; allow overflow: visible"
+          }
+        },
+        "cardSubtle": {
+          "selector": ".muted-card, .stat-compact",
+          "background": "#FBFBFD",
+          "border": "1px solid rgba(168,163,193,0.04)",
+          "shadow": "0px 8px 18px rgba(23,21,50,0.04)",
+          "borderRadius": "16px",
+          "contentText": {
+            "percent": { "color": "#261863", "weight": 700 },
+            "label": { "color": "#747384", "weight": 500 }
           }
         }
       },
-      "states": {
+  
+      "buttons": {
+        "primary": {
+          "selector": ".btn-primary, .cta-primary",
+          "background": "linear-gradient(135deg, #FFFFFF 0%, #B971A3 50%, #A03E82 100%)",
+          "backgroundFallback": "#D975BB",
+          "text": "#FFFFFF",
+          "icon": { "fill": "#FFFFFF", "size": "18px" },
+          "padding": "14px 22px",
+          "borderRadius": "28px",
+          "shadow": "0px 10px 22px rgba(35,21,97,0.14)",
+          "hover": {
+            "background": "linear-gradient(135deg, #FFFFFF 0%, #C58AB8 50%, #B04A91 100%)",
+            "transform": "translateY(-2px)",
+            "shadow": "0px 14px 28px rgba(35,21,97,0.18)"
+          },
+          "active": {
+            "transform": "translateY(0px) scale(0.995)",
+            "shadow": "0px 8px 18px rgba(35,21,97,0.12)"
+          },
+          "disabled": {
+            "background": "linear-gradient(135deg, rgba(217,117,187,0.32) 0%, rgba(160,62,130,0.24) 100%)",
+            "text": "rgba(255,255,255,0.5)",
+            "cursor": "not-allowed"
+          }
+        },
+        "secondary": {
+          "selector": ".btn-secondary, .cta-ghost",
+          "background": "#FFFFFF",
+          "border": "1px solid rgba(168,163,193,0.12)",
+          "text": "#261863",
+          "icon": { "fill": "#7056B2", "size": "16px" },
+          "padding": "12px 18px",
+          "borderRadius": "20px",
+          "hover": {
+            "background": "rgba(168,163,193,0.04)",
+            "border": "1px solid rgba(168,163,193,0.14)"
+          },
+          "active": {
+            "transform": "translateY(0px) scale(0.995)",
+            "shadow": "0px 6px 12px rgba(35,21,97,0.06)"
+          },
+          "disabled": {
+            "text": "rgba(38,24,99,0.14)",
+            "border": "1px solid rgba(168,163,193,0.03)"
+          }
+        },
+        "iconCircle": {
+          "selector": ".icon-circle, .fab, .plus-btn",
+          "size": "56px",
+          "background": "linear-gradient(135deg, #D975BB 0%, #7056B2 100%)",
+          "backgroundFallback": "#7056B2",
+          "textIcon": "#FFFFFF",
+          "borderRadius": "50%",
+          "shadow": "0px 10px 24px rgba(35,21,97,0.14)",
+          "hover": {
+            "scale": 1.03,
+            "shadow": "0px 14px 28px rgba(35,21,97,0.20)"
+          }
+        }
+      },
+  
+      "icons": {
+        "navIcon": {
+          "selector": ".nav .icon",
+          "fill": "#FFFFFF",
+          "containerBackground": "transparent",
+          "inactive": { "fill": "#A8A3C1", "opacity": 0.9 },
+          "active": { "fill": "#D975BB", "opacity": 1 }
+        },
+        "actionIcon": {
+          "selector": ".action .icon, .card .icon",
+          "fill": "#FFFFFF",
+          "containerBackground": "linear-gradient(180deg, #7056B2 0%, #55389B 100%)",
+          "borderRadius": "12px",
+          "size": "40px"
+        },
+        "smallIcon": {
+          "selector": ".small-icon",
+          "fill": "#261863",
+          "background": "rgba(168,163,193,0.06)",
+          "borderRadius": "8px"
+        }
+      },
+  
+      "navigation": {
+        "bottomNav": {
+          "selector": ".bottom-nav",
+          "background": "linear-gradient(180deg, #261863 0%, #2E2169 100%)",
+          "height": "86px",
+          "borderRadius": "34px",
+          "shadow": "0px 20px 48px rgba(35,21,97,0.18)",
+          "iconColorInactive": "#A8A3C1",
+          "iconColorActive": "#D975BB",
+          "centerAction": {
+            "selector": ".bottom-nav .center-action",
+            "shape": "circle",
+            "size": "64px",
+            "background": "linear-gradient(180deg, #7056B2 0%, #55389B 100%)",
+            "iconFill": "#FFFFFF",
+            "shadow": "0px 14px 28px rgba(35,21,97,0.18)"
+          }
+        }
+      },
+  
+      "backgrounds": {
+        "appBackground": {
+          "selector": "body, .app-root",
+          "background": "linear-gradient(180deg, #EBE2FF 0%, #A990D4 60%, #261863 100%)",
+          "notes": "Use subtle radial overlays (low opacity) for decorative circles."
+        },
+        "sheetBackground": {
+          "selector": ".left-hero, .onboarding-panel",
+          "background": "linear-gradient(180deg, #261863 0%, #481162 100%)",
+          "overlay": "rgba(0,0,0,0.04)"
+        }
+      },
+  
+      "borders": {
+        "softBorder": "1px solid rgba(168,163,193,0.06)",
+        "strongBorder": "1px solid rgba(38,24,99,0.06)",
+        "roundedPillBorderRadius": "9999px"
+      }
+    },
+  
+    "componentStateMapping": {
+      "card": {
+        "default": {
+          "background": "#FFFFFF",
+          "shadow": "0px 18px 36px rgba(38,24,99,0.08)",
+          "border": "1px solid rgba(168,163,193,0.06)"
+        },
         "hover": {
-          "actionTile": "brightness(1.05), scale(1.02)",
-          "primaryButton": "darker gradient, elevated shadow, translateY(-2px)",
-          "navIcon": "color transition to #D975BB"
+          "background": "#FFFFFF",
+          "shadow": "0px 22px 44px rgba(35,21,97,0.10)",
+          "transform": "translateY(-4px)"
         },
         "active": {
-          "actionTile": "scale(0.98)",
-          "primaryButton": "reduced shadow, translateY(0)"
-        },
-        "focus": {
-          "primaryButton": "2px outline #8462E1 with 4px offset"
+          "transform": "translateY(0px)",
+          "shadow": "0px 8px 18px rgba(35,21,97,0.06)"
         },
         "disabled": {
-          "primaryButton": "background #A8A3C1, text #FFFFFF, opacity 0.6"
+          "background": "#FBFBFD",
+          "text": "rgba(23,21,50,0.24)",
+          "border": "1px solid rgba(168,163,193,0.03)"
+        },
+        "focus": {
+          "outline": "3px solid rgba(217,117,187,0.14)",
+          "outlineOffset": "2px"
         }
       },
-      "layout": {
-        "spacing": {
-          "section": "32px",
-          "card": "24px",
-          "element": "16px",
-          "tight": "8px"
+      "primaryButton": {
+        "default": {
+          "background": "linear-gradient(135deg, #FFFFFF 0%, #B971A3 50%, #A03E82 100%)",
+          "text": "#FFFFFF"
         },
-        "grid": {
-          "actionTiles": "3-column with 12px gutters",
-          "metricCards": "2-column with 16px gutters"
+        "hover": {
+          "background": "linear-gradient(135deg, #FFFFFF 0%, #C58AB8 50%, #B04A91 100%)",
+          "shadow": "0px 14px 28px rgba(35,21,97,0.18)"
+        },
+        "active": {
+          "transform": "scale(0.995)",
+          "shadow": "0px 8px 18px rgba(35,21,97,0.12)"
+        },
+        "disabled": {
+          "background": "linear-gradient(135deg, rgba(217,117,187,0.32) 0%, rgba(160,62,130,0.24) 100%)",
+          "text": "rgba(255,255,255,0.5)"
+        },
+        "focus": {
+          "outline": "2px solid rgba(217,117,187,0.20)",
+          "outlineOffset": "2px"
+        }
+      },
+      "iconCircle": {
+        "default": {
+          "background": "linear-gradient(135deg, #D975BB 0%, #7056B2 100%)",
+          "fill": "#FFFFFF"
+        },
+        "hover": {
+          "transform": "scale(1.03)",
+          "shadow": "0px 14px 28px rgba(35,21,97,0.20)"
+        },
+        "active": {
+          "transform": "scale(0.98)"
+        },
+        "disabled": {
+          "background": "rgba(217,117,187,0.18)",
+          "fill": "rgba(255,255,255,0.6)"
+        },
+        "focus": {
+          "ring": "3px solid rgba(168,163,193,0.16)"
         }
       }
-    }
+    },
+  
+    "accessibility": {
+      "contrastTargets": {
+        "heroNumberOnDeepPurple": {
+          "foreground": "#FFFFFF",
+          "background": "#261863",
+          "contrastRatio": ">= 7:1 (sufficient for large numbers)"
+        },
+        "primaryTextOnWhite": {
+          "foreground": "#171532",
+          "background": "#FFFFFF",
+          "contrastRatio": ">= 12:1"
+        },
+        "mutedTextOnWhite": {
+          "foreground": "#747384",
+          "background": "#FFFFFF",
+          "contrastRatio": ">= 4.5:1"
+        }
+      },
+      "focusGuidelines": "Focus states use visible 2–3px outlines with semi-transparent primary pink to match visual language without obstructing content."
+    },
+  
+    "spacingAndSizing": {
+      "cardPadding": "16px",
+      "cardGap": "12px",
+      "largeHeroPadding": "32px",
+      "iconSizes": {
+        "navIcon": "20px",
+        "actionIcon": "40px",
+        "fabIcon": "24px"
+      }
+    },
+  
+    "visualEffectPlacement": {
+      "shadows": [
+        {
+          "appliesTo": ["hero-card", "main-illustration-card"],
+          "shadowToken": "elevation1"
+        },
+        {
+          "appliesTo": ["floating-cta", "circular-action"],
+          "shadowToken": "elevation2"
+        },
+        {
+          "appliesTo": ["bottom-nav-pocket"],
+          "shadowToken": "elevationInset"
+        }
+      ],
+      "gradients": [
+        {
+          "appliesTo": ["hero-left-panel", "onboarding-panels"],
+          "gradient": "gradientA_left"
+        },
+        {
+          "appliesTo": ["primary-cta", "fab", "plus-buttons"],
+          "gradient": "gradientB_center"
+        },
+        {
+          "appliesTo": ["accent-cards", "nav-center-action"],
+          "gradient": "gradientC_right"
+        }
+      ],
+      "radiusUses": [
+        { "appliesTo": ["full-cards", "desktop-cards"], "radius": "24px" },
+        { "appliesTo": ["iconContainers", "small-cards"], "radius": "12px" },
+        { "appliesTo": ["bottom-nav-pocket"], "radius": "34px" }
+      ]
+    },
+  
+    "selectors": {
+      ".hero-card": "Use accentCard styles",
+      ".balance-card": "Use accentCard styles (hero balance area)",
+      ".card": "Use defaultCard styles",
+      ".stat-compact": "Use cardSubtle styles",
+      ".btn-primary": "Use buttons.primary",
+      ".btn-secondary": "Use buttons.secondary",
+      ".icon-circle, .fab, .plus-btn": "Use buttons.iconCircle",
+      ".bottom-nav": "Use navigation.bottomNav",
+      ".nav .icon": "Use icons.navIcon"
+    },
+  
+    "colorAccuracyNotes": {
+      "sampleTechnique": [
+        "Sample multiple points along gradients (top/middle/bottom) and prefer the official color swatches shown in Fonts_and_Colors.png where present.",
+        "When a component overlay is present (e.g., an illustration over a gradient), use the gradient base color (not overlay) for CSS backgrounds.",
+        "If exact hex is not in artboard, sample the dominant pixel color then prefer the closest artboard color."
+      ],
+      "sampledColors": {
+        "/mnt/data/02.jpg": ["#EBE2FF", "#BBBCDB", "#ECECF6"],
+        "/mnt/data/03.jpg": ["#997ACA", "#261863", "#A990D4"],
+        "/mnt/data/Screen 2.jpg": ["#261863", "#D975BB", "#7055B2"],
+        "fonts_artboard": ["#D975BB", "#261863", "#171532", "#747384", "#A8A3C1", "#7056B2"]
+      }
+    },
+  
+    "DO_NOT_rules": [
+      "DO NOT apply card gradients (e.g. gradientA_left / gradientC_right) to small icon glyph fills. Icons should use solid fills or small container gradients specified in icons.actionIcon.",
+      "DO NOT use primary button text color for body copy; primary button text is white (#FFFFFF) on a gradient background only.",
+      "DO NOT place heavy hero shadows on small inline elements — use elevation2 or smaller shadows for icons.",
+      "DO NOT reduce card borderRadius below 12px for mobile; visual language uses rounded shapes.",
+      "DO NOT use bottom-nav gradient on unrelated forms or input backgrounds; bottom-nav gradient is structural to the navigation pouch only.",
+      "DO NOT swap header text color (#171532/#261863) with muted body color (#747384) for headings — headings must be the darker text for legibility."
+    ]
   }
+  
