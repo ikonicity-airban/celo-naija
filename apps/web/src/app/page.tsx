@@ -15,7 +15,7 @@ export default function Home() {
     queryKey: ["/api/balance"],
   });
 
-  // Fetch transactions
+  // Fetch transaction
   const { data: transactionsData } = useQuery({
     queryKey: ["/api/transactions"],
   });
