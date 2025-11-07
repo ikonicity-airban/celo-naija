@@ -3,7 +3,6 @@ import { Lato } from 'next/font/google';
 import './globals.css';
 
 import { Navbar } from '@/components/navbar';
-import { WalletProvider } from "@/components/wallet-provider"
 
 const lato = Lato({ 
   subsets: ['latin'],
@@ -25,11 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={lato.className}>
         <div className="relative flex min-h-screen flex-col">
-          <WalletProvider>
             <main className="flex-1">
               {children}
             </main>
-          </WalletProvider>
         </div>
       </body>
     </html>
