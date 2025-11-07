@@ -6,8 +6,7 @@ import { injectedWallet } from "@rainbow-me/rainbowkit/wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { WagmiProvider, createConfig, http, useConnect } from "wagmi";
-import { celo, celoAlfajores, celoSepolia, sepolia } from "wagmi/chains";
-import { ConnectButton } from "./connect-button";
+import { celoSepolia } from "wagmi/chains";
 
 const connectors = connectorsForWallets(
   [
@@ -17,17 +16,15 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: "my-celo-app",
-    projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID!,
+    appName: "Celo Naija",
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }
 );
 
 const wagmiConfig = createConfig({
-  chains: [celo, celoAlfajores, celoSepolia],
+  chains: [celoSepolia],
   connectors,
   transports: {
-    [celo.id]: http(),
-    [celoAlfajores.id]: http(),
     [celoSepolia.id]: http(),
   },
   ssr: true,
@@ -39,9 +36,7 @@ function WalletProviderInner({ children }: { children: React.ReactNode }) {
   const { connect, connectors } = useConnect();
 
   useEffect(() => {
-    // Check if the app is running inside MiniPay
     if (window.ethereum && window.ethereum.isMiniPay) {
-      // Find the injected connector, which is what MiniPay uses
       const injectedConnector = connectors.find((c) => c.id === "injected");
       if (injectedConnector) {
         connect({ connector: injectedConnector });
