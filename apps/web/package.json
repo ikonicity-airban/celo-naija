@@ -7,7 +7,15 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    
+    "db:generate": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    
+    "contracts:compile": "cd ../contracts && pnpm compile",
+    "contracts:deploy": "cd ../contracts && pnpm deploy:alfajores"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
