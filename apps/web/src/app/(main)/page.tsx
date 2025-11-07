@@ -1,14 +1,43 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import BalanceCard from "@/components/BalanceCard";
 import TransactionListItem from "@/components/TransactionListItem";
 import { Button } from "@/components/ui/button";
 import { Bell, TrendingUp } from "lucide-react";
+import { hasUser, getUserPhone, getOrCreateUser } from "@/lib/auth";
 
 export default function Home() {
   const router = useRouter();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      // Check if user exists
+      if (!hasUser()) {
+        router.push("/onboarding");
+        return;
+      }
+
+      // Verify user exists in database
+      const phone = getUserPhone();
+      if (phone) {
+        const user = await getOrCreateUser(phone);
+        if (!user) {
+          // If user doesn't exist in DB, redirect to onboarding
+          router.push("/onboarding");
+          return;
+        }
+      }
+
+      setIsCheckingAuth(false);
+    };
+
+    checkAuth();
+  }, [router]);
 
   // Mock data for now - replace with real API calls
   const balance = { cNGN: 150000, ngn: 247500000 };
@@ -41,6 +70,17 @@ export default function Home() {
       createdAt: new Date(Date.now() - 7200000).toISOString(),
     },
   ];
+
+  // Show loading state while checking auth
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-body text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pb-24">
