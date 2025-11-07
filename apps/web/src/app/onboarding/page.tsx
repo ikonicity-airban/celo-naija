@@ -1,9 +1,12 @@
 "use client";
 import { ArrowRight, Wallet, Shield, Zap, Globe, Phone, Smartphone, Banknote, Lightbulb, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ImgCoin from "../../assets/coins.png";
+import { setUserPhone, getOrCreateUser } from "@/lib/auth";
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [mounted, setMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,6 +14,7 @@ export default function OnboardingPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Carousel slides content
   const slides = [
@@ -95,15 +99,34 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleSubmit = () => {
-    if (isValid) {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("onboarding_completed", "true");
-        localStorage.setItem("user_phone", phoneNumber);
+  const handleSubmit = async () => {
+    if (isValid && !isSubmitting) {
+      setIsSubmitting(true);
+      setError("");
+
+      try {
+        // Remove spaces from phone number (normalization happens in getOrCreateUser)
+        const cleanedPhone = phoneNumber.replace(/\s/g, "");
+        
+        // Get or create user via API (will normalize to +234 format)
+        const user = await getOrCreateUser(cleanedPhone);
+        
+        if (user) {
+          // Store normalized phone number in localStorage
+          setUserPhone(user.phoneNumber);
+          
+          // Close modal and redirect to home
+          setShowModal(false);
+          router.push("/");
+        } else {
+          setError("Failed to create account. Please try again.");
+        }
+      } catch (err: any) {
+        console.error("Error creating user:", err);
+        setError(err.message || "Failed to create account. Please try again.");
+      } finally {
+        setIsSubmitting(false);
       }
-      // Redirect or next step
-      alert(`Welcome to Celo Naija! Phone: ${phoneNumber}`);
-      setShowModal(false);
     }
   };
 
@@ -424,18 +447,18 @@ export default function OnboardingPage() {
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={!isValid}
+              disabled={!isValid || isSubmitting}
               className="w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 fontFamily: "Lato, sans-serif",
-                background: isValid 
+                background: isValid && !isSubmitting
                   ? "linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(59, 130, 246, 0.9) 100%)"
                   : "rgba(255,255,255,0.1)",
-                color: isValid ? "#FFFFFF" : "#6B7280",
-                boxShadow: isValid ? "0 4px 20px rgba(139, 92, 246, 0.3)" : "none"
+                color: isValid && !isSubmitting ? "#FFFFFF" : "#6B7280",
+                boxShadow: isValid && !isSubmitting ? "0 4px 20px rgba(139, 92, 246, 0.3)" : "none"
               }}
             >
-              Continue
+              {isSubmitting ? "Creating account..." : "Continue"}
             </button>
 
             {/* Info text */}
