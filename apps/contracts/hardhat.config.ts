@@ -4,6 +4,9 @@ import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-ignition-ethers"; // Required for Ignition
 
+import * as dotenv from "dotenv";
+dotenv.config();
+
 const config = {
   solidity: {
     version: "0.8.28",
