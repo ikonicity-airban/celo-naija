@@ -9,7 +9,7 @@ export const CONTRACTS = {
         'function decimals() view returns (uint8)',
         'function symbol() view returns (string)',
       ],
-    },
+    } as const,
     celoNaija: {
       address: '0x2cec797506339AE0A03EC41f1824dDd9674A79Af' as `0x${string}`,
       abi: [
@@ -23,7 +23,7 @@ export const CONTRACTS = {
         'event Sent(address indexed from, address indexed to, uint256 amount, string purpose)',
         'event AirtimePurchase(address indexed buyer, uint256 amount, string provider)',
       ],
-    },
+    } as const,
     billPay: {
       address: '0xd197c9712cfa3b488F8d3Bed211E6D8730B210Fb' as `0x${string}`,
       abi: [

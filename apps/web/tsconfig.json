@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
+    "types": ["next", "next/image-types/global", "node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
