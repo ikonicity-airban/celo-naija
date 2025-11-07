@@ -4,69 +4,89 @@
 
 @layer base {
   :root {
-    --border: 214.3 31.8% 91.4%;
-    --input: 216 33% 97%;
-    --ring: 215 20.2% 65.1%;
-
+    /* Primary Colors */
+    --color-pink: #D975BB;
+    --color-deep-violet: #261863;
+    --color-navy: #171532;
+    
+    /* Secondary Colors */
+    --color-muted-gray-purple: #747384;
+    --color-soft-lavender: #A8A3C1;
+    --color-vivid-purple: #7056B2;
+    
+    /* Neutrals */
+    --color-white: #FFFFFF;
+    --color-off-white-1: #FBFBFD;
+    --color-off-white-2: #F8F6FB;
+    --color-light-lavender: #EBE2FF;
+    --color-muted-lilac: #CCBCEB;
+    
+    /* Design System Tokens */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 239 84% 11%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --card-foreground: 239 84% 11%;
+    --card-border: 246 16% 79% / 0.06;
+    
+    --primary: 316 51% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-border: 316 51% 60%;
+    
+    --secondary: 240 40% 96%;
+    --secondary-foreground: 239 84% 11%;
+    --secondary-border: 246 16% 79% / 0.12;
+    
+    --muted: 240 40% 96%;
+    --muted-foreground: 244 8% 49%;
+    
+    --accent: 240 40% 96%;
+    --accent-foreground: 239 84% 11%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-border: 0 84% 60%;
+    
+    --border: 246 16% 79% / 0.06;
+    --input: 246 16% 79%;
+    --ring: 316 51% 60%;
+    
+    --radius: 1rem;
+    
+    /* Shadows */
+    --shadow-elevation-1: 0px 18px 36px rgba(38, 24, 99, 0.12);
+    --shadow-elevation-2: 0px 8px 18px rgba(35, 21, 97, 0.10);
+    --shadow-elevation-inset: inset 0px 6px 18px rgba(35, 21, 97, 0.06);
+    
+    /* Button Outline Color */
+    --button-outline: rgba(168, 163, 193, 0.12);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --background: 239 84% 11%;
+    --foreground: 0 0% 98%;
+    
+    --card: 239 84% 11%;
+    --card-foreground: 0 0% 98%;
+    
+    --primary: 316 51% 60%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 244 8% 49%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 244 8% 49%;
+    --muted-foreground: 246 16% 79%;
+    
+    --accent: 244 8% 49%;
+    --accent-foreground: 0 0% 98%;
+    
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 244 8% 49%;
+    --input: 244 8% 49%;
+    --ring: 316 51% 60%;
   }
 }
 
@@ -74,7 +94,93 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
+    font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Typography Scale from design.json */
+  .text-h1 {
+    @apply text-4xl font-extrabold leading-[44px] text-[#171532];
+  }
+  
+  .text-h2 {
+    @apply text-2xl font-bold leading-8 text-[#261863];
+  }
+  
+  .text-body {
+    @apply text-sm font-normal leading-5 text-[#747384];
+  }
+  
+  .text-body-lg {
+    @apply text-base font-normal leading-6 text-[#171532];
+  }
+  
+  .text-display {
+    @apply text-[32px] font-extrabold text-white;
+  }
+  
+  .text-caption {
+    @apply text-xs font-medium text-[#A8A3C1];
+  }
+  
+  /* Gradient Utilities */
+  .bg-gradient-a {
+    background: linear-gradient(180deg, #131B63 0%, #481162 100%);
+  }
+  
+  .bg-gradient-b {
+    background: linear-gradient(135deg, #FFFFFF 0%, #B971A3 50%, #A03E82 100%);
+  }
+  
+  .bg-gradient-c {
+    background: linear-gradient(180deg, #8462E1 0%, #55389B 60%, #A03E82 100%);
+  }
+  
+  /* Shadow Utilities */
+  .shadow-elevation-1 {
+    box-shadow: var(--shadow-elevation-1);
+  }
+  
+  .shadow-elevation-2 {
+    box-shadow: var(--shadow-elevation-2);
+  }
+  
+  .shadow-elevation-inset {
+    box-shadow: var(--shadow-elevation-inset);
+  }
+  
+  /* Interactive States */
+  .hover-elevate {
+    @apply transition-all duration-200;
+  }
+  
+  .hover-elevate:hover {
+    @apply -translate-y-1 shadow-elevation-2;
+  }
+  
+  .active-elevate-2:active {
+    @apply translate-y-0 scale-[0.995];
+  }
+  
+  /* Layout Utilities */
+  .max-w-mobile {
+    @apply max-w-md mx-auto;
+  }
+  
+  /* Card Utilities */
+  .card-default {
+    @apply bg-white rounded-3xl p-4 shadow-elevation-1 border border-[rgba(168,163,193,0.06)];
+  }
+  
+  .card-accent {
+    @apply bg-gradient-a rounded-[28px] p-6 shadow-[0px_24px_48px_rgba(38,24,99,0.16)] border-0;
+  }
+  
+  .card-subtle {
+    @apply bg-[#FBFBFD] rounded-2xl p-4 shadow-[0px_8px_18px_rgba(23,21,50,0.04)] border border-[rgba(168,163,193,0.04)];
   }
 }

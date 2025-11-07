@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Card } from "./ui/card";
-import { ArrowRight, User } from "lucide-react";
+import { ArrowRight, User, ArrowLeft } from "lucide-react";
 
 interface SendMoneyFormProps {
   onSend?: (phone: string, amount: number) => void;
@@ -38,16 +37,16 @@ export default function SendMoneyForm({ onSend }: SendMoneyFormProps) {
   return (
     <div className="space-y-6">
       {step === "phone" && (
-        <Card className="p-6">
+        <div className="card-default">
           <h2 className="text-h2 mb-6">Send Money</h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="phone" className="text-body mb-2">
+              <Label htmlFor="phone" className="text-body-lg font-semibold text-deep-violet mb-2">
                 Phone Number
               </Label>
               <div className="flex gap-2">
-                <div className="flex items-center px-3 h-12 bg-muted rounded-lg">
-                  <span className="text-body-lg">+234</span>
+                <div className="flex items-center px-4 h-12 bg-[#F8F6FB] rounded-2xl border border-[rgba(168,163,193,0.06)]">
+                  <span className="text-body-lg font-medium text-deep-violet">+234</span>
                 </div>
                 <Input
                   id="phone"
@@ -56,7 +55,7 @@ export default function SendMoneyForm({ onSend }: SendMoneyFormProps) {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   data-testid="input-phone"
-                  className="flex-1 h-12 text-body-lg"
+                  className="flex-1 h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl"
                 />
               </div>
             </div>
@@ -70,26 +69,27 @@ export default function SendMoneyForm({ onSend }: SendMoneyFormProps) {
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </div>
-        </Card>
+        </div>
       )}
 
       {step === "amount" && (
-        <Card className="p-6">
+        <div className="card-default">
           <button
             onClick={() => setStep("phone")}
             data-testid="button-back"
-            className="text-body text-primary mb-4 hover-elevate px-3 py-1 rounded"
+            className="flex items-center gap-2 text-body-lg text-vivid-purple mb-4 hover-elevate px-3 py-2 rounded-lg -ml-3"
           >
-            ← Back
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </button>
           <h2 className="text-h2 mb-6">Enter Amount</h2>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="amount" className="text-body mb-2">
+              <Label htmlFor="amount" className="text-body-lg font-semibold text-deep-violet mb-2">
                 Amount (NGN)
               </Label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-body-lg text-muted-foreground">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-body-lg font-semibold text-muted-gray-purple">
                   ₦
                 </span>
                 <Input
@@ -99,11 +99,11 @@ export default function SendMoneyForm({ onSend }: SendMoneyFormProps) {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   data-testid="input-amount"
-                  className="pl-8 h-12 text-body-lg"
+                  className="pl-8 h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl"
                 />
               </div>
               {amount && (
-                <p className="text-caption text-muted-foreground mt-2" data-testid="text-conversion">
+                <p className="text-caption text-muted-gray-purple mt-2" data-testid="text-conversion">
                   ≈ {amountCNGN.toFixed(4)} cNGN (1 cNGN = ₦{exchangeRate})
                 </p>
               )}
@@ -132,53 +132,54 @@ export default function SendMoneyForm({ onSend }: SendMoneyFormProps) {
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </div>
-        </Card>
+        </div>
       )}
 
       {step === "review" && (
-        <Card className="p-6">
+        <div className="card-default">
           <button
             onClick={() => setStep("amount")}
             data-testid="button-back-review"
-            className="text-body text-primary mb-4 hover-elevate px-3 py-1 rounded"
+            className="flex items-center gap-2 text-body-lg text-vivid-purple mb-4 hover-elevate px-3 py-2 rounded-lg -ml-3"
           >
-            ← Back
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </button>
           <h2 className="text-h2 mb-6">Review Transaction</h2>
           <div className="space-y-6">
-            <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-                <User className="w-6 h-6 text-primary" />
+            <div className="flex items-center gap-4 p-4 bg-[#F8F6FB] rounded-2xl border border-[rgba(168,163,193,0.06)]">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-c">
+                <User className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-body-lg font-medium" data-testid="text-review-phone">
+                <p className="text-body-lg font-semibold text-deep-violet" data-testid="text-review-phone">
                   +234 {phone}
                 </p>
-                <p className="text-caption text-muted-foreground">Recipient</p>
+                <p className="text-caption text-muted-gray-purple">Recipient</p>
               </div>
             </div>
 
-            <div className="space-y-3 p-4 bg-muted rounded-lg">
+            <div className="space-y-3 p-4 bg-[#F8F6FB] rounded-2xl border border-[rgba(168,163,193,0.06)]">
               <div className="flex justify-between">
-                <span className="text-body text-muted-foreground">Amount</span>
-                <span className="text-body-lg font-semibold" data-testid="text-review-amount">
+                <span className="text-body text-muted-gray-purple">Amount</span>
+                <span className="text-body-lg font-semibold text-deep-violet" data-testid="text-review-amount">
                   ₦{parseFloat(amount).toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-body text-muted-foreground">cNGN Equivalent</span>
-                <span className="text-body" data-testid="text-review-cngn">
+                <span className="text-body text-muted-gray-purple">cNGN Equivalent</span>
+                <span className="text-body text-deep-violet" data-testid="text-review-cngn">
                   {amountCNGN.toFixed(4)} cNGN
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-body text-muted-foreground">Fee</span>
-                <span className="text-body text-primary">Free</span>
+                <span className="text-body text-muted-gray-purple">Fee</span>
+                <span className="text-body text-pink font-semibold">Free</span>
               </div>
-              <div className="h-px bg-border my-2" />
+              <div className="h-px bg-[rgba(168,163,193,0.12)] my-2" />
               <div className="flex justify-between">
-                <span className="text-body-lg font-medium">Total</span>
-                <span className="text-body-lg font-bold" data-testid="text-review-total">
+                <span className="text-body-lg font-semibold text-deep-violet">Total</span>
+                <span className="text-body-lg font-bold text-deep-violet" data-testid="text-review-total">
                   {amountCNGN.toFixed(4)} cNGN
                 </span>
               </div>
@@ -192,7 +193,7 @@ export default function SendMoneyForm({ onSend }: SendMoneyFormProps) {
               Send Money
             </Button>
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );

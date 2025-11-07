@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Lato } from 'next/font/google';
 import './globals.css';
 
 import { Navbar } from '@/components/navbar';
 import { WalletProvider } from "@/components/wallet-provider"
 
-const inter = Inter({ subsets: ['latin'] });
+const lato = Lato({ 
+  subsets: ['latin'],
+  weight: ['400', '700', '900'],
+  variable: '--font-lato',
+});
 
 export const metadata: Metadata = {
-  title: 'my-celo-app',
-  description: 'A new Celo blockchain project',
+  title: 'NaijaSend - Send Money Home, Fast',
+  description: 'Send money to Nigeria using cNGN on the Celo blockchain',
 };
 
 export default function RootLayout({
@@ -19,11 +23,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {/* Navbar is included on all pages */}
+      <body className={lato.className}>
         <div className="relative flex min-h-screen flex-col">
           <WalletProvider>
-            <Navbar />
             <main className="flex-1">
               {children}
             </main>

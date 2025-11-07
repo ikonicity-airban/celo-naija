@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Card } from "./ui/card";
 import { Smartphone } from "lucide-react";
 
 type Network = "mtn" | "airtel" | "glo" | "9mobile";
@@ -41,46 +40,46 @@ export default function AirtimePurchaseCard({ onPurchase }: AirtimePurchaseCardP
   };
 
   return (
-    <Card className="p-6">
+    <div className="card-default">
       <div className="flex items-center gap-3 mb-6">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
-          <Smartphone className="w-6 h-6 text-primary" />
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-c">
+          <Smartphone className="w-6 h-6 text-white" />
         </div>
         <div>
           <h2 className="text-h2">Buy Airtime</h2>
-          <p className="text-caption text-muted-foreground">Quick top-up with cNGN</p>
+          <p className="text-caption">Quick top-up with cNGN</p>
         </div>
       </div>
 
       <div className="space-y-6">
         <div>
-          <Label className="text-body mb-3">Select Network</Label>
+          <Label className="text-body-lg font-semibold text-deep-violet mb-3">Select Network</Label>
           <div className="grid grid-cols-2 gap-3">
             {networks.map((network) => (
               <button
                 key={network.id}
                 onClick={() => setSelectedNetwork(network.id)}
                 data-testid={`button-network-${network.id}`}
-                className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all hover-elevate ${
+                className={`flex items-center gap-3 p-4 rounded-2xl border-2 transition-all hover-elevate ${
                   selectedNetwork === network.id
-                    ? "border-primary bg-primary/5"
-                    : "border-border"
+                    ? "border-pink bg-pink/5 shadow-elevation-2"
+                    : "border-[rgba(168,163,193,0.12)] hover:border-[rgba(168,163,193,0.2)]"
                 }`}
               >
-                <div className={`w-8 h-8 rounded-full ${network.color}`} />
-                <span className="text-body-lg font-medium">{network.name}</span>
+                <div className={`w-8 h-8 rounded-full ${network.color} shadow-sm`} />
+                <span className="text-body-lg font-semibold text-deep-violet">{network.name}</span>
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <Label htmlFor="airtime-phone" className="text-body mb-2">
+          <Label htmlFor="airtime-phone" className="text-body-lg font-semibold text-deep-violet mb-2">
             Phone Number
           </Label>
           <div className="flex gap-2">
-            <div className="flex items-center px-3 h-12 bg-muted rounded-lg">
-              <span className="text-body-lg">+234</span>
+            <div className="flex items-center px-4 h-12 bg-[#F8F6FB] rounded-2xl border border-[rgba(168,163,193,0.06)]">
+              <span className="text-body-lg font-medium text-deep-violet">+234</span>
             </div>
             <Input
               id="airtime-phone"
@@ -89,13 +88,13 @@ export default function AirtimePurchaseCard({ onPurchase }: AirtimePurchaseCardP
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               data-testid="input-airtime-phone"
-              className="flex-1 h-12 text-body-lg"
+              className="flex-1 h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl"
             />
           </div>
         </div>
 
         <div>
-          <Label className="text-body mb-3">Amount (NGN)</Label>
+          <Label className="text-body-lg font-semibold text-deep-violet mb-3">Amount (NGN)</Label>
           <div className="grid grid-cols-4 gap-2 mb-3">
             {amounts.map((amt) => (
               <Button
@@ -121,10 +120,10 @@ export default function AirtimePurchaseCard({ onPurchase }: AirtimePurchaseCardP
               setAmount(null);
             }}
             data-testid="input-custom-amount"
-            className="h-12 text-body-lg"
+            className="h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl"
           />
           {finalAmount > 0 && (
-            <p className="text-caption text-muted-foreground mt-2" data-testid="text-airtime-conversion">
+            <p className="text-caption text-muted-gray-purple mt-2" data-testid="text-airtime-conversion">
               ≈ {amountCNGN.toFixed(4)} cNGN
             </p>
           )}
@@ -139,6 +138,6 @@ export default function AirtimePurchaseCard({ onPurchase }: AirtimePurchaseCardP
           Purchase Airtime
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }
