@@ -1,8 +1,10 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Zap, Tv, Droplet } from "lucide-react";
+import { Zap, Tv, Droplet, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -10,11 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { usePayBill } from "@/lib/hooks/use-api";
+import { useToast } from "@/hooks/use-toast";
+import { formatNGN } from "@/lib/contracts/utils";
 
 type BillType = "nepa" | "dstv" | "water";
 
 interface BillPaymentCardProps {
-  onPay?: (type: BillType, meterNumber: string, amount: number) => void;
+  onSuccess?: () => void;
 }
 
 const billTypes = [
@@ -30,22 +35,46 @@ const dstvPackages = [
   { name: "DStv Compact", amount: 10500 },
 ];
 
-export default function BillPaymentCard({ onPay }: BillPaymentCardProps) {
+export default function BillPaymentCard({ onSuccess }: BillPaymentCardProps) {
   const [selectedType, setSelectedType] = useState<BillType>("nepa");
   const [meterNumber, setMeterNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedPackage, setSelectedPackage] = useState("");
+  const { mutateAsync: payBill, isPending } = usePayBill();
+  const { toast } = useToast();
 
-  const exchangeRate = 1650;
+  const exchangeRate = Number(process.env.NEXT_PUBLIC_CNGN_TO_NGN_RATE || 1);
   const amountNGN = parseFloat(amount) || 0;
   const amountCNGN = amountNGN / exchangeRate;
 
-  const handlePay = () => {
-    if (onPay && meterNumber && amountNGN > 0) {
-      onPay(selectedType, meterNumber, amountNGN);
+  const handlePay = async () => {
+    if (!meterNumber || amountNGN <= 0) return;
+
+    try {
+      await payBill({
+        billType: selectedType,
+        meterNumber,
+        amountNGN,
+        packageName: selectedPackage || undefined,
+      });
+
+      toast({
+        title: "Bill Paid Successfully!",
+        description: `${formatNGN(amountNGN)} paid for ${selectedType.toUpperCase()}`,
+      });
+
+      // Reset form
       setMeterNumber("");
       setAmount("");
       setSelectedPackage("");
+
+      if (onSuccess) onSuccess();
+    } catch (error: any) {
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Please try again",
+        variant: "destructive",
+      });
     }
   };
 
@@ -59,7 +88,15 @@ export default function BillPaymentCard({ onPay }: BillPaymentCardProps) {
 
   return (
     <div className="card-default">
-      <h2 className="text-h2 mb-6">Pay Bills</h2>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[#7056B2] to-[#A03E82] shadow-elevation-2">
+          <Zap className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h2 className="text-h2">Pay Bills</h2>
+          <p className="text-caption text-muted-gray-purple">NEPA, DSTV, Water bills</p>
+        </div>
+      </div>
 
       <div className="space-y-6">
         <div>
@@ -75,8 +112,9 @@ export default function BillPaymentCard({ onPay }: BillPaymentCardProps) {
                     setAmount("");
                     setSelectedPackage("");
                   }}
+                  disabled={isPending}
                   data-testid={`button-bill-${type.id}`}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 whitespace-nowrap transition-all hover-elevate ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 whitespace-nowrap transition-all hover-elevate active-elevate-2 ${
                     selectedType === type.id
                       ? "border-pink bg-pink/5 shadow-elevation-2"
                       : "border-[rgba(168,163,193,0.12)] hover:border-[rgba(168,163,193,0.2)]"
@@ -102,15 +140,16 @@ export default function BillPaymentCard({ onPay }: BillPaymentCardProps) {
             placeholder="Enter number"
             value={meterNumber}
             onChange={(e) => setMeterNumber(e.target.value)}
+            disabled={isPending}
             data-testid="input-meter-number"
-            className="h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl"
+            className="h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl focus:border-pink focus:ring-2 focus:ring-pink/20"
           />
         </div>
 
         {selectedType === "dstv" && (
           <div>
             <Label className="text-body-lg font-semibold text-deep-violet mb-2">Package</Label>
-            <Select value={selectedPackage} onValueChange={handlePackageSelect}>
+            <Select value={selectedPackage} onValueChange={handlePackageSelect} disabled={isPending}>
               <SelectTrigger data-testid="select-package" className="h-12 rounded-2xl border-[rgba(168,163,193,0.06)]">
                 <SelectValue placeholder="Select package" />
               </SelectTrigger>
@@ -140,8 +179,9 @@ export default function BillPaymentCard({ onPay }: BillPaymentCardProps) {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                disabled={isPending}
                 data-testid="input-bill-amount"
-                className="pl-8 h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl"
+                className="pl-8 h-12 text-body-lg border-[rgba(168,163,193,0.06)] rounded-2xl focus:border-pink focus:ring-2 focus:ring-pink/20"
               />
             </div>
           </div>
@@ -155,11 +195,18 @@ export default function BillPaymentCard({ onPay }: BillPaymentCardProps) {
 
         <Button
           onClick={handlePay}
-          disabled={!meterNumber || amountNGN <= 0}
+          disabled={!meterNumber || amountNGN <= 0 || isPending}
           data-testid="button-pay-bill"
-          className="w-full h-12"
+          className="w-full h-12 bg-gradient-b text-white hover-elevate active-elevate-2"
         >
-          Pay Bill
+          {isPending ? (
+            <>
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            "Pay Bill"
+          )}
         </Button>
       </div>
     </div>

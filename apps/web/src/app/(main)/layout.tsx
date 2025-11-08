@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import BottomNav from "@/components/BottomNav";
 import { hasUser, getUserPhone, getOrCreateUser } from "@/lib/auth";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export default function MainLayout({
   children,
@@ -47,20 +48,12 @@ export default function MainLayout({
 
   // Show loading state while checking auth
   if (isCheckingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-body text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
     <>
-      <div className="relative min-h-screen">
-        {children}
-      </div>
+      <div className="relative min-h-screen">{children}</div>
       <BottomNav />
     </>
   );

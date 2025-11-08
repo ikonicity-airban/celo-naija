@@ -1,57 +1,40 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTransactions } from "@/lib/hooks/use-api";
 import BalanceCard from "@/components/BalanceCard";
 import TransactionListItem from "@/components/TransactionListItem";
 import { Button } from "@/components/ui/button";
-import { Bell, TrendingUp } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Bell, TrendingUp, Activity } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
+  const { data: transactions, isLoading: txLoading } = useTransactions();
 
-  // Mock data for now - replace with real API calls
-  const balance = { cNGN: 150000, ngn: 247500000 };
-  const transactions = [
-    {
-      id: "1",
-      type: "sent" as const,
-      recipient: "Chidi Okafor",    
-      recipientPhone: "8123456789",
-      amountNGN: "50000",
-      status: "completed" as const,
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "2",
-      type: "received" as const,
-      recipient: "Ngozi Adeyemi",
-      recipientPhone: "8098765432",
-      amountNGN: "25000",
-      status: "completed" as const,
-      createdAt: new Date(Date.now() - 3600000).toISOString(),
-    },
-    {
-      id: "3",
-      type: "airtime" as const,
-      recipient: "MTN Airtime",
-      recipientPhone: "8123456789",
-      amountNGN: "1000",
-      status: "completed" as const,
-      createdAt: new Date(Date.now() - 7200000).toISOString(),
-    },
-  ];
+  // Calculate stats from transactions
+  const thisMonthTotal = transactions?.reduce((sum: number, tx: any) => {
+    const txDate = new Date(tx.createdAt);
+    const now = new Date();
+    if (txDate.getMonth() === now.getMonth() && tx.type === "sent") {
+      return sum + parseFloat(tx.amountNGN);
+    }
+    return sum;
+  }, 0) || 0;
+
+  const completedCount = transactions?.filter((tx: any) => tx.status === "completed").length || 0;
 
   return (
     <div className="min-h-screen pb-24">
       {/* Gradient Background */}
       <div
-        className="absolute inset-0 -z-10"
+        className="fixed inset-0 -z-10"
         style={{
           background: "linear-gradient(180deg, #EBE2FF 0%, #F8F6FB 100%)",
         }}
       />
 
-      <div className="max-w-mobile mx-auto">
+      <div className="max-w-mobile mx-auto lg:max-w-4xl">
         {/* Header */}
         <header className="sticky top-0 z-10">
           <div
@@ -64,7 +47,7 @@ export default function Home() {
               <div>
                 <h1 className="text-h1">Celo Naija</h1>
                 <p className="text-caption text-muted-foreground">
-                Remit, pay bills, buy airtime & data – all with your phone number
+                  Remit, pay bills, buy airtime & data
                 </p>
               </div>
               <Button
@@ -83,8 +66,6 @@ export default function Home() {
         <div className="p-4 space-y-6">
           {/* Balance Card */}
           <BalanceCard
-            balanceCNGN={balance.cNGN}
-            balanceNGN={balance.ngn}
             onSend={() => router.push("/send")}
             onReceive={() => console.log("Receive clicked")}
             onBuyAirtime={() => router.push("/send")}
@@ -99,18 +80,19 @@ export default function Home() {
                   This Month
                 </span>
               </div>
-              <p className="text-h2">₦125,000</p>
+              <p className="text-h2">₦{thisMonthTotal.toLocaleString()}</p>
               <p className="text-caption text-pink font-semibold mt-1">
-                +12% from last month
+                Total sent
               </p>
             </div>
             <div className="card-subtle">
               <div className="flex items-center gap-2 mb-2">
+                <Activity className="w-4 h-4 text-[#7056B2]" />
                 <span className="text-caption text-muted-gray-purple">
                   Transactions
                 </span>
               </div>
-              <p className="text-h2">24</p>
+              <p className="text-h2">{completedCount}</p>
               <p className="text-caption text-muted-gray-purple mt-1">
                 Completed
               </p>
@@ -126,31 +108,56 @@ export default function Home() {
                 size="sm"
                 onClick={() => router.push("/activity")}
                 data-testid="button-view-all"
+                className="text-[#7056B2] hover:text-[#55389B]"
               >
                 View All
               </Button>
             </div>
 
-            {transactions.length === 0 ? (
+            {txLoading ? (
+              <div className="space-y-1 bg-card rounded-lg border border-card-border overflow-hidden">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center gap-4 p-4 border-b border-card-border last:border-0">
+                    <Skeleton className="w-12 h-12 rounded-xl" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-48" />
+                    </div>
+                    <Skeleton className="h-6 w-20" />
+                  </div>
+                ))}
+              </div>
+            ) : transactions?.length === 0 ? (
               <div className="card-default text-center py-12">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 rounded-full bg-[#EBE2FF] flex items-center justify-center">
+                    <Activity className="w-8 h-8 text-[#7056B2]" />
+                  </div>
+                </div>
                 <p className="text-body text-muted-foreground">
                   No transactions yet
                 </p>
                 <p className="text-caption text-muted-foreground mt-1">
                   Start by sending money or buying airtime
                 </p>
+                <Button
+                  onClick={() => router.push("/send")}
+                  className="mt-4 bg-gradient-b text-white hover-elevate"
+                >
+                  Send Money
+                </Button>
               </div>
             ) : (
-              <div className="space-y-1 bg-card rounded-lg border border-card-border overflow-hidden">
-                {transactions.slice(0, 5).map((tx: any) => (
+              <div className="space-y-1 bg-card rounded-lg border border-card-border overflow-hidden shadow-elevation-1">
+                {transactions?.slice(0, 5).map((tx: any) => (
                   <TransactionListItem
                     key={tx.id}
                     type={tx.type}
-                    recipient={tx.recipient}
-                    phone={tx.recipientPhone}
+                    recipient={tx.recipientPhone}
+                    phone={tx.recipientPhone.replace("+234", "")}
                     amount={parseFloat(tx.amountNGN)}
                     status={tx.status}
-                    timestamp={new Date(tx.createdAt).toLocaleString()}
+                    timestamp={tx.createdAt}
                     onClick={() => console.log("Transaction clicked:", tx.id)}
                   />
                 ))}

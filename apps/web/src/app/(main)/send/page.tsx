@@ -7,66 +7,12 @@ import AirtimePurchaseCard from "@/components/AirtimePurchaseCard";
 import BillPaymentCard from "@/components/BillPaymentCard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Send, Smartphone, Zap } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 type TabType = "send" | "airtime" | "bills";
 
 export default function SendPage() {
   const router = useRouter();
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<TabType>("send");
-
-  const handleSendMoney = async (phone: string, amount: number) => {
-    try {
-      // TODO: Integrate with smart contract
-      toast({
-        title: "Money Sent!",
-        description: `₦${amount.toLocaleString()} sent to +234${phone}`,
-      });
-      
-      setTimeout(() => router.push("/"), 1500);
-    } catch (error) {
-      toast({
-        title: "Transfer Failed",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleAirtimePurchase = async (network: string, phone: string, amount: number) => {
-    try {
-      toast({
-        title: "Airtime Purchased!",
-        description: `₦${amount} ${network.toUpperCase()} airtime sent to +234${phone}`,
-      });
-      
-      setTimeout(() => router.push("/"), 1500);
-    } catch (error) {
-      toast({
-        title: "Purchase Failed",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleBillPayment = async (type: string, meterNumber: string, amount: number) => {
-    try {
-      toast({
-        title: "Bill Paid!",
-        description: `₦${amount.toLocaleString()} paid for ${type.toUpperCase()}`,
-      });
-      
-      setTimeout(() => router.push("/"), 1500);
-    } catch (error) {
-      toast({
-        title: "Payment Failed",
-        description: "Please try again",
-        variant: "destructive",
-      });
-    }
-  };
 
   const tabs = [
     { id: "send" as TabType, label: "Send Money", icon: Send },
@@ -74,17 +20,31 @@ export default function SendPage() {
     { id: "bills" as TabType, label: "Pay Bills", icon: Zap },
   ];
 
+  const handleSuccess = () => {
+    // Refresh or redirect after successful transaction
+    setTimeout(() => router.push("/"), 1500);
+  };
+
   return (
-    <div className="min-h-screen bg-background pb-24">
-      <div className="max-w-mobile mx-auto">
+    <div className="min-h-screen pb-24">
+      {/* Gradient Background */}
+      <div
+        className="fixed inset-0 -z-10"
+        style={{
+          background: "linear-gradient(180deg, #EBE2FF 0%, #F8F6FB 100%)",
+        }}
+      />
+
+      <div className="max-w-mobile mx-auto lg:max-w-4xl">
         {/* Header */}
-        <header className="sticky top-0 bg-background/80 backdrop-blur-lg z-10 border-b border-border">
+        <header className="sticky top-0 z-10 backdrop-blur-md" style={{ background: "rgba(251, 251, 253, 0.8)" }}>
           <div className="flex items-center gap-4 p-4">
             <Button
               size="icon"
               variant="ghost"
               onClick={() => router.push("/")}
               data-testid="button-back"
+              className="hover-elevate active-elevate-2"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -105,7 +65,7 @@ export default function SendPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   data-testid={`tab-${tab.id}`}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-2xl whitespace-nowrap transition-all hover-elevate ${
+                  className={`flex items-center gap-2 px-4 py-3 rounded-2xl whitespace-nowrap transition-all hover-elevate active-elevate-2 ${
                     activeTab === tab.id
                       ? "bg-gradient-b text-white shadow-elevation-2"
                       : "bg-card text-muted-foreground border border-card-border"
@@ -119,11 +79,13 @@ export default function SendPage() {
           </div>
         </header>
 
-        {/* Content */}
+        {/* Content - Desktop Responsive */}
         <div className="p-4">
-          {activeTab === "send" && <SendMoneyForm onSend={handleSendMoney} />}
-          {activeTab === "airtime" && <AirtimePurchaseCard onPurchase={handleAirtimePurchase} />}
-          {activeTab === "bills" && <BillPaymentCard onPay={handleBillPayment} />}
+          <div className="lg:max-w-2xl lg:mx-auto">
+            {activeTab === "send" && <SendMoneyForm onSuccess={handleSuccess} />}
+            {activeTab === "airtime" && <AirtimePurchaseCard onSuccess={handleSuccess} />}
+            {activeTab === "bills" && <BillPaymentCard onSuccess={handleSuccess} />}
+          </div>
         </div>
       </div>
     </div>
