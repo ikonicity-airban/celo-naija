@@ -1,10 +1,15 @@
 "use client";
 import { ArrowRight, Wallet, Shield, Zap, Globe, Phone, Smartphone, Banknote, Lightbulb, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 import PhoneNumberModal from "@/components/PhoneNumberModal";
 import ImgCoin from "../../assets/coins.png";
+import { setUserPhone, getOrCreateUser } from "@/lib/auth";
 
 export default function OnboardingPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [mounted, setMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -68,21 +73,38 @@ export default function OnboardingPage() {
     setShowModal(true);
   };
 
-  const handlePhoneSubmit = (phoneNumber: string) => {
-    // Store with the full format +234
-    const fullPhoneNumber = `+234${phoneNumber}`;
-    
-    if (typeof window !== "undefined") {
-      localStorage.setItem("onboarding_completed", "true");
-      localStorage.setItem("user_phone", fullPhoneNumber);
+  const handlePhoneSubmit = async (phoneNumber: string) => {
+    try {
+      // Get or create user from API (normalizes phone number automatically)
+      const user = await getOrCreateUser(phoneNumber);
+      
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "Failed to create user. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Save phone number to localStorage using auth utility
+      setUserPhone(user.phoneNumber);
+
+      toast({
+        title: "Success!",
+        description: "Phone number saved successfully!",
+      });
+      
+      // Navigate to dashboard
+      router.push('/');
+    } catch (error) {
+      console.error("Error in handlePhoneSubmit:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
     }
-    
-    // Redirect or next step
-    alert(`Welcome to Celo Naija! Phone: ${fullPhoneNumber}`);
-    setShowModal(false);
-    
-    // You can add navigation here, e.g.:
-    // router.push('/dashboard');
   };
 
   const nextSlide = () => {
@@ -154,7 +176,8 @@ export default function OnboardingPage() {
                 backgroundClip: "text",
               }}
             >
-              Banking Made Simple for Nigerians
+              {slides[currentSlide].title}
+
             </h1>
 
             {/* Carousel Section */}
@@ -167,7 +190,7 @@ export default function OnboardingPage() {
                   </div>
                   <div className="flex-1">
                     <h3 
-                      className="text-base sm:text-lg lg:text-xl font-bold text-white mb-1.5 sm:mb-2 transition-all duration-500"
+                      className="text-base sm:text-lg lg:text-xl font-medium text-white mb-1.5 sm:mb-2 transition-all duration-500"
                       style={{ fontFamily: "Lato, sans-serif" }}
                     >
                       {slides[currentSlide].description}
