@@ -23,7 +23,7 @@ export default function SendPage() {
         title: "Money Sent!",
         description: `₦${amount.toLocaleString()} sent to +234${phone}`,
       });
-      
+
       setTimeout(() => router.push("/"), 1500);
     } catch (error) {
       toast({
@@ -34,13 +34,17 @@ export default function SendPage() {
     }
   };
 
-  const handleAirtimePurchase = async (network: string, phone: string, amount: number) => {
+  const handleAirtimePurchase = async (
+    network: string,
+    phone: string,
+    amount: number
+  ) => {
     try {
       toast({
         title: "Airtime Purchased!",
         description: `₦${amount} ${network.toUpperCase()} airtime sent to +234${phone}`,
       });
-      
+
       setTimeout(() => router.push("/"), 1500);
     } catch (error) {
       toast({
@@ -51,13 +55,17 @@ export default function SendPage() {
     }
   };
 
-  const handleBillPayment = async (type: string, meterNumber: string, amount: number) => {
+  const handleBillPayment = async (
+    type: string,
+    meterNumber: string,
+    amount: number
+  ) => {
     try {
       toast({
         title: "Bill Paid!",
         description: `₦${amount.toLocaleString()} paid for ${type.toUpperCase()}`,
       });
-      
+
       setTimeout(() => router.push("/"), 1500);
     } catch (error) {
       toast({
@@ -121,9 +129,9 @@ export default function SendPage() {
 
         {/* Content */}
         <div className="p-4">
-          {activeTab === "send" && <SendMoneyForm onSend={handleSendMoney} />}
-          {activeTab === "airtime" && <AirtimePurchaseCard onPurchase={handleAirtimePurchase} />}
-          {activeTab === "bills" && <BillPaymentCard onPay={handleBillPayment} />}
+          {activeTab === "send" && <SendMoneyForm />}
+          {activeTab === "airtime" && <AirtimePurchaseCard />}
+          {activeTab === "bills" && <BillPaymentCard />}
         </div>
       </div>
     </div>
